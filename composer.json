@@ -2,7 +2,7 @@
     "name": "arthur/tcc",
     "autoload": {
         "psr-4": {
-            "app\\": "src/"
+            "AdasFinance\\": "src/"
         }
     },
     "require": {}
