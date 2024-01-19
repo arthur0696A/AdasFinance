@@ -11,13 +11,13 @@ class User {
     private $password;
     private $email;
 
-    public function __construct(stdClass $user) 
+    public function __construct(array $user = []) 
     {
-        $this->id = $user->id;
-        $this->username = $user->username;
-        $this->name = $user->name;
-        $this->password = $user->password;
-        $this->email = $user->email;
+        $this->id = $user['id'] ?? null;
+        $this->username = $user['username'] ?? null;
+        $this->name = $user['name'] ?? null;
+        $this->password = $user['password'] ?? null;
+        $this->email = $user['email'] ?? null;
     }
 
     /**

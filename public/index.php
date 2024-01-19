@@ -2,25 +2,28 @@
 require '../vendor/autoload.php';
 
 session_start();
-$allowed_routes = require_once __DIR__ . "/routes.php";
+$routes = require_once __DIR__ . "/routes.php";
 $route = $_GET['route'] ?? 'home';
 
-if (!isset($_SESSION['user']) && $route !== 'login') {
-      $route = 'signin';
+if (!isset($_SESSION['user']) && !in_array($route, $routes['public'])) {
+      $route = 'login';
 }
   
-if (isset($_SESSION['user']) && $route === 'signup') {
+if (isset($_SESSION['user']) && $route === 'login') {
       $route = 'home';
 }
 
-if (!in_array($route, $allowed_routes)) {
+if (!in_array($route, $routes['allowed'])) {
       $route = '404';
 }  
 
 $controller = match($route) {
-      "404", "login", "signin", "signup", "logout" => "AdasFinance\Controller\UserController",
+      "login", "login_submit", "signup", "signup_submit", "logout" => "AdasFinance\Controller\UserController",
       "home" => "AdasFinance\Controller\AssetController"
 };
+
+/** Convert snake case to cammel case */
+$route = lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $route))));
 
 $route.="Action";
 $object = new $controller();
