@@ -1,0 +1,15 @@
+<nav class="container mt-5 p-4 border rounded-3 shadow-sm bg-light">
+    <div class="row align-items-center">
+        <div class="col">
+            <h4>Adas Finance</h4>
+        </div>
+        <div class="col text-center">
+            <a href="?route=home">Home</a>
+        </div>
+        <div class="col text-end">
+            <strong><?php echo($_SESSION['user']->getUsername()) ?></strong>
+            <span class="mx-2">|</span>
+            <a href="?route=logout">Sair</a>
+        </div>
+    </div>
+</nav>

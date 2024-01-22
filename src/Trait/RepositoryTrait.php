@@ -1,5 +1,7 @@
 <?php
-namespace AdasFinance\Service;
+namespace AdasFinance\Trait;
+
+use AdasFinance\Service\ConnectionCreator;
 use PDO;
 use PDOException;
 

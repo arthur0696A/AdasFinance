@@ -2,6 +2,32 @@
     background: #55a8c9;
 }
 
+.form-label-group {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.text-input {
+    width: 100%;
+    height: 4em;
+    padding-top: 1em !important;
+}
+
+.label-text {
+    position: absolute;
+    pointer-events: none;
+    padding: 10px;
+    transition: 0.3s;
+    opacity: 0;
+}
+
+.text-input:not(:placeholder-shown) + label,
+.text-input:valid + label {
+    top: -0.6em;
+    font-size: 0.8em;
+    opacity: 1;
+    color: gray;
+}
 
 
 
