@@ -1,8 +1,7 @@
 <?php
 namespace AdasFinance\Repository;
 
-use AdasFinance\Service\ConnectionCreator;
-use AdasFinance\Service\RepositoryTrait;
+use AdasFinance\Trait\RepositoryTrait;
 
 class UserAssetRepository implements RepositoryInterface
 {
