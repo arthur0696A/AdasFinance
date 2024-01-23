@@ -2,12 +2,19 @@
     include 'navbar.html';      
 ?>
 <div class="container mt-5">
-    <div class="row">
-        <div class="col">
-            <h4>HOME</h4>
-
-            <p>teste: <?php echo $assets[0]["average_price"]; ?></p>
-            <p>teste: <?php echo $assets[0]["quantity"]; ?></p>
-        </div>
-    </div>
-</div>
+    <table class="table align-middle mb-0 bg-white">
+        <thead class="bg-light">
+          <tr>
+            <th class="text-center">Ativo</th>
+            <th class="text-center">Quantidade</th>
+            <th class="text-center">Preço Médio</th>
+            <th class="text-center">Preço Atual</th>
+            <th class="text-center">Valor Total</th>
+            <td class="table-divider"></td>
+            <th class="text-center">%</th>
+            <th class="text-center">% Objetivo</th>
+            <th class="text-center">Ação</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
