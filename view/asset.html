@@ -45,22 +45,27 @@
     <td class="table-divider"></td>
     <td>
         <div class="primary-value">
-            <span class="current-percentage">
+            <span data-user-asset-id='<?php echo $asset["id"]; ?>'>
                 <?php echo $asset["percentage"]; ?>%
             </span>
         </div>
         <div class="second-value">
             <span>
                 <i class="fas me-1"></i>
-                <span id="percentage-goal-difference" class="difference"></span>
+                <span class="difference" data-user-asset-id='<?php echo $asset["id"]; ?>'></span>
             </span>
         </div>
     </td>
     <td>
-        <input class="current-percentage objective-percentage" type="number" min="0" max="100" value='<?php echo $asset["percentage_goal"]; ?>'>
+        <div class="input-container">
+            <input class="objective-percentage" data-user-asset-id='<?php echo $asset["id"]; ?>' type="text" value='<?php echo $asset["percentage_goal"]; ?>'>
+            <span class="spinner">
+                <i class="fa-solid fa-rotate-right fa-spin"></i>
+            </span>
+        </div>
     </td>
     <td>
-        <span class="badge rounded-pill d-inline" style="font-size: 1em;"></span>
+        <span class="badge rounded-pill d-inline" data-user-asset-id='<?php echo $asset["id"]; ?>' style="font-size: 1em;"></span>
     </td>
     <td class="ms-auto">
         <div class="circle" style="background-color: #43A047;">

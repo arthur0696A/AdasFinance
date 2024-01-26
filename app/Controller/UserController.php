@@ -28,7 +28,7 @@ class UserController
         $result = $this->userRepository->saveUser($parameters);
 
         if($result['status'] === 'success') {
-            header('Location: index.php?route=login');
+            header('Location: login');
             exit;
         }
     }
@@ -41,57 +41,50 @@ class UserController
         require_once '../view/login.html';
     }
 
-    public function loginSubmitAction() 
+    public function loginSubmitAction($parameters) 
     {    
-        $parameters = $this->validateNoFieldsMissing();
+        $this->validateNoFieldsMissing($parameters);
 
-        $result = $this->userRepository->getUserByUsername($parameters['username']);
-        $user = $this->validateLogin($result, $parameters['password']);
+        $result = $this->userRepository->getUserByUsername($parameters->username);
+        $user = $this->validateLogin($result, $parameters->password);
         
         $_SESSION['user'] = $user;
-        header('Location: index.php?route=home');
+        header('Location: home');
     }
     
     public function logoutAction()
     {
         session_destroy();
-        header('Location: index.php?route=login');
+        header('Location: login');
     }
 
-    private function validateNoFieldsMissing()
+    private function validateNoFieldsMissing($parameters)
     {
-        if($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: index.php?route=' . $_POST['action']);
-            exit;
-        }
-
-        foreach ($_POST as $key => $value) {
+        foreach ($parameters as $key => $value) {
             if(!$value) {
                 $_SESSION['error'] = 'Usuário ou senha inválidos';
-                header('Location: index.php?route=' . $_POST['action']);
+                header('Location: ' . $parameters->action);
                 exit;
             }
         }
-
-        return $_POST;
     }
 
     private function validateLogin(array $result, string $password)
     {
         if($result['status'] === 'error') {
-            header('Location: index.php?route=404');
+            header('Location: 404');
             exit;
         }
         
         if(count($result['data']) === 0) {
             $_SESSION['error'] = 'Usuário ou senha inválidos';
-            header('Location: index.php?route=login');
+            header('Location: login');
             exit;
         }
         
         if(!password_verify($password, $result['data'][0]->password)) {
             $_SESSION['error'] = 'Usuário ou senha inválidos';
-            header('Location: index.php?route=login');
+            header('Location: login');
             exit;
         }
 

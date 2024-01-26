@@ -1,8 +1,8 @@
 {
-    "name": "arthur/tcc",
+    "name": "arthur/adasfinance",
     "autoload": {
         "psr-4": {
-            "AdasFinance\\": "src/"
+            "AdasFinance\\": "app/"
         }
     },
     "require": {}
