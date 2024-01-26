@@ -55,4 +55,21 @@ class UserAssetRepository implements RepositoryInterface
 
         return $this->query($sql, $params);
     }
+
+    public function setAssetGoalPercentage($parameters)
+    {
+        $sql = "UPDATE
+            UserAsset
+        SET
+            percentage_goal = :value
+        WHERE
+            id = :id";
+        
+        $params = [
+            ':value' => str_replace(',', '.', $parameters->newObjectivePercentageValue),
+            ':id' => $parameters->userAssetId
+        ];
+
+        return $this->query($sql, $params);
+    }
 }
