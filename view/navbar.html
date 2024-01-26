@@ -2,8 +2,8 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
     <div class="container-fluid" style="margin: 0 2em 0 2em;">
         <div class="col">
-            <a class="navbar-brand mt-2 mt-lg-0" href="#">
-                <img src="/../TCC/public/assets/images/logo.png" style="width: 7em; height:3em;">
+            <a class="navbar-brand mt-2 mt-lg-0" href="home">
+                <img src="/assets/images/logo.png" style="width: 7em; height:3em;">
             </a>
         </div>
         <div class="col text-center">
@@ -19,29 +19,26 @@
         <div class="d-flex align-items-center">
             <div class="dropdown">
                 <a
-                data-mdb-dropdown-init
-                class="dropdown-toggle d-flex align-items-center hidden-arrow"
-                href="#"
-                id="navbarDropdownMenuAvatar"
-                role="button"
-                aria-expanded="false"
+                    data-mdb-dropdown-init
+                    class="dropdown-toggle d-flex align-items-center hidden-arrow"
+                    href="#"
+                    id="navbarDropdownMenuAvatar"
+                    role="button"
+                    aria-expanded="false"
                 >
-                <i class="fa-solid fa-user" style="margin-right: 10px;"></i>
-                <strong><?php echo($_SESSION['user']->getName()) ?></strong>
+                    <i class="fa-solid fa-user" style="margin-right: 10px;"></i>
+                    <strong><?php echo($_SESSION['user']->getName()) ?></strong>
                 </a>
-                <ul
-                class="dropdown-menu dropdown-menu-end"
-                aria-labelledby="navbarDropdownMenuAvatar"
-                >
-                <li>
-                    <a class="dropdown-item" href="#">Meu Perfil</a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="#">Configurações</a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="?route=logout">Sair</a>
-                </li>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
+                    <li>
+                        <a class="dropdown-item" href="#">Meu Perfil</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">Configurações</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="logout">Sair</a>
+                    </li>
                 </ul>
             </div>
         </div>

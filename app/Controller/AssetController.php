@@ -29,8 +29,8 @@ class AssetController
             $asset['asset_price_difference'] = $this->numberFormat(($asset['last_price'] - $asset['average_price']) / $asset['average_price'] * 100);
             $asset['total_price_difference'] = $this->numberFormat($asset['last_price'] * 100 - $asset['average_price'] * 100);
             $asset['percentage'] = $this->numberFormat(($asset['last_price'] * 100 / $totalUserAmount) * 100);
+            $asset['percentage_goal'] = $this->numberFormat($asset['percentage_goal']);
             $asset['average_price'] = $this->numberFormat($asset['average_price']);
-            $asset['last_price'] = $this->numberFormat($asset['last_price']);
             include '../view/asset.html';
         }
 
