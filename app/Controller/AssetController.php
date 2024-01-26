@@ -37,6 +37,13 @@ class AssetController
         include '../view/home-end.html';
     }
 
+    public function assetGoalPercentageAction($parameters)
+    {
+        $result = $this->userAssetRepository->setAssetGoalPercentage($parameters);
+
+        return json_encode(['success' => true, 'message' => 'Dados cadastrados com sucesso']);
+    }
+
     private function handleResult(array $result)
     {
         $finalData = [];

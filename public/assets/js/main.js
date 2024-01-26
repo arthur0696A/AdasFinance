@@ -4,11 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     addEventListeners();
 });
 
-let percentageDiff;
-
 function formatTable() {
-    new mdb.Dropdown(document.getElementById('navbarDropdownMenuAvatar'));
-    
     let cells = document.querySelectorAll('td');
     cells.forEach(function(cell) {
         cell.classList.add('text-center');
@@ -79,30 +75,43 @@ function calculateObjectivePercentageDifference() {
     });
 
     if (objectivePercentageSum > 100) {
-        showAlert();
-    } else {
-        closeAlert();
+        showAlertContainer();
+        return false;
     }
+
+    closeAlertContainer();
+    return true;
 }
 
-function addEventListeners() {
+async function addEventListeners() {
     let objectivePercentageInputs = document.querySelectorAll('.objective-percentage');
 
     objectivePercentageInputs.forEach(function(input) {
-        input.addEventListener('blur', function() {
-            const container = input.parentNode;
-            const spinner = container.querySelector('.spinner');
+        let originalValue = input.value;
 
-            input.style.display = 'none';
-            spinner.style.display = 'block';
+        input.addEventListener('focus', function() {
+            originalValue = input.value;
+        });
 
-            calculateObjectivePercentageDifference();
+        input.addEventListener('blur', async function() {
+            if (input.value !== originalValue) {
+                const container = input.parentNode;
+                const spinner = container.querySelector('.spinner');
 
-            //console.log(input.getAttribute('data-user-asset-id'))
-            setTimeout(() => {
-                input.style.display = '';
-                spinner.style.display = 'none';
-            }, 2000);
+                if (calculateObjectivePercentageDifference()) {
+                    input.style.display = 'none';
+                    spinner.style.display = 'block';
+
+                    const userAssetId = input.getAttribute('data-user-asset-id');
+                    const newValue = input.value;
+
+                    setTimeout(async () => {
+                        await saveNewObjectivePercentageValue(userAssetId, newValue);
+                        input.style.display = '';
+                        spinner.style.display = 'none';
+                    }, 1000);
+                }
+            }
         });
 
         input.addEventListener('keyup', function(event) {
@@ -124,6 +133,32 @@ const numberMask = (input) => {
     input.value = result;
 }
 
+function saveNewObjectivePercentageValue(userAssetId, value) {
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            userAssetId: userAssetId,
+            newObjectivePercentageValue: value
+        }),
+    }
+
+    return fetch('http://localhost:8000/asset_goal_percentage', options)
+        .then(response => {
+            if (response.ok) {
+                showSuccessContainer();
+                setTimeout(async () => {
+                    closeSuccessContainer()
+                }, 4000);
+            }
+        })
+        .catch(error => {
+            console.error('Falha ao cadastrar:', error);
+        });
+}
+
 function convertToFloat(value) {
     value = value.trim();
     value = value.replace('%', '');
@@ -133,10 +168,18 @@ function convertToFloat(value) {
     return value;
 }
 
-function closeAlert() {
-    document.querySelector('.alert-container').style.display = 'none';
+function showSuccessContainer() {
+    document.querySelector('.success-container').style.display = 'block';
 }
 
-function showAlert() {
+function closeSuccessContainer() {
+    document.querySelector('.success-container').style.display = 'none';
+}
+
+function showAlertContainer() {
     document.querySelector('.alert-container').style.display = 'block';
+}
+
+function closeAlertContainer() {
+    document.querySelector('.alert-container').style.display = 'none';
 }

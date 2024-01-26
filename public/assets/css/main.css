@@ -82,22 +82,56 @@
     margin-right: -0.3em;
 }
 
-.alert-container {
+.message-container {
     display: none;
     position: relative;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    color: #721c24;
     padding: 15px;
     border-radius: 5px;
     margin-top: 20px;
     text-align: center;
 }
 
-.fa-triangle-exclamation {
+.alert-container {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.success-container {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #1b7e32;
+}
+
+.fa-triangle-exclamation, .fa-circle-check {
     margin-right: 10px;
+}
+
+.fa-xmark {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
 }
 
 .spinner {
     display: none;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.footer {
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: auto;
+}
+
+.social-media-btn {
+    margin: 0 5px;
 }

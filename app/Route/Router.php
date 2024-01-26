@@ -28,7 +28,9 @@ class Router
                 throw new Exception("Action {$action} not found in Controller {$controller}");
             }
 
-            $controllerInstance->$action((object)$_REQUEST);
+            $data = json_decode(file_get_contents("php://input"), true) ?? $_REQUEST;
+
+            $controllerInstance->$action((object) $data);
         } catch (\Throwable $th) {
             echo $th->getMessage();
         }
@@ -48,6 +50,7 @@ class Router
 
             'post' => [
                 '/login_submit' => fn () => self::load('UserController', 'loginSubmit'),
+                '/asset_goal_percentage' => fn () => self::load('AssetController', 'assetGoalPercentage'),
             ],
 
             'put' => [
