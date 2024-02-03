@@ -2,13 +2,11 @@
 
 use AdasFinance\Route\Router;
 
-require '../vendor/autoload.php';
-require_once __DIR__ . "/../view/header.html";
+require_once '../vendor/autoload.php';
 
 session_start();
 Router::execute();
 
-require_once __DIR__ . "/../view/footer.html";
 ?>
 
 

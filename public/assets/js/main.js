@@ -113,27 +113,110 @@ async function addEventListeners() {
                 }
             }
         });
+    });
 
-        input.addEventListener('keyup', function(event) {
-            numberMask(input);
-            event.preventDefault();
+    let doubleMaskInputs = document.querySelectorAll('.double-mask');
+    doubleMaskInputs.forEach((doubleMaskInput) => {
+        doubleMaskInput.addEventListener('keyup', (event) => {
+            numberMask(doubleMaskInput);
         });
+    });
+
+    const autocompleteAssetInput = document.getElementById('autocomplete-asset-input');
+    const autocompleteAssetList = document.getElementById('autocomplete-asset-list');
+    let autocompleteData;
+
+    const collapseForm = document.getElementById("collapse-form");
+
+    autocompleteAssetInput.addEventListener('keyup', async () => {
+        const searchQuery = autocompleteAssetInput.value.toUpperCase().trim();
+        if (searchQuery !== "") {
+            autocompleteData = await searchBySymbol(searchQuery);
+        } else {
+            autocompleteAssetList.innerHTML = '';
+            collapseForm.classList.remove("show");
+            return;
+        }
+
+        autocompleteAssetList.innerHTML = '';
+        const filteredData = autocompleteData
+            .filter(item => item.symbol.toUpperCase().includes(searchQuery) || item.name.toUpperCase().includes(searchQuery))
+            .slice(0, 5); 
+
+        filteredData.forEach(item => {
+            const listItem = document.createElement('li');
+            listItem.classList.add('list-group-item');
+            listItem.innerText = `${item.symbol} - ${item.name}`;
+            listItem.dataset.symbol = item.symbol;
+            listItem.dataset.name = item.name;
+            listItem.dataset.lastPrice = item.lastPrice;
+            autocompleteAssetList.appendChild(listItem);
+        });
+    });
+
+    autocompleteAssetList.addEventListener('click', (event) => {
+        const selectedSymbol = event.target.dataset.symbol;
+        const selectedName = event.target.dataset.name;
+        const selectedLastPrice = doubleMaskValue(event.target.dataset.lastPrice);
+
+        const lastPriceElement = document.getElementById('last-price');
+        const assetNameElement = document.getElementById('asset-name');
+        const averagePrice = document.getElementById('average-price');
+        const quantity = document.getElementById('quantity');
+        
+        numberMask(averagePrice);
+        numberMask(quantity);
+
+        const assetInfo = document.getElementById('asset-info');
+        const assetNameBlock = document.getElementById('asset-name-block');
+
+        const inputEvent = new Event('input', { bubbles: true });
+
+        autocompleteAssetList.innerHTML = '';
+        autocompleteAssetInput.value = selectedSymbol;
+    
+        if (selectedSymbol && selectedName && selectedLastPrice) {
+            lastPriceElement.value = selectedLastPrice;
+            assetNameElement.value = selectedName;
+
+            collapseForm.classList.add('show');
+            assetInfo.classList.add('d-flex');
+            assetNameBlock.style.display = 'block';
+
+            lastPriceElement.dispatchEvent(inputEvent);
+            assetNameElement.dispatchEvent(inputEvent);
+            averagePrice.dispatchEvent(inputEvent);
+            quantity.dispatchEvent(inputEvent);
+        }
     });
 }
 
-const numberMask = (input) => {
-    let value = input.value.replace('.', '').replace(',', '').replace(/\D/g, '');
-  
-    let floatValue = Math.max(parseFloat(value) / 100, 0);
-    floatValue = Math.min(floatValue, 100);
+async function searchBySymbol(symbol) {
+    const url = `http://localhost:8000/search_by_symbol?symbol=${symbol}`;
 
-    const options = { minimumFractionDigits: 2 };
-    const result = new Intl.NumberFormat('pt-BR', options).format(floatValue);
+    try {
+        const response = await fetch(url);
 
-    input.value = result;
+        if (response.ok) {
+            const data = await response.json();
+            const resultArray = data.data.map(
+                item => ({ 
+                    symbol: item.symbol, 
+                    name: item.name, 
+                    lastPrice: item.last_price 
+                })
+            );
+
+            return resultArray;
+        } else {
+            throw new Error('Erro na solicitação');
+        }
+    } catch (error) {
+        console.error('Falha na solicitação:', error);
+    }
 }
 
-function saveNewObjectivePercentageValue(userAssetId, value) {
+async function saveNewObjectivePercentageValue(userAssetId, value) {
     const options = {
         method: 'POST',
         headers: {
@@ -159,6 +242,13 @@ function saveNewObjectivePercentageValue(userAssetId, value) {
         });
 }
 
+function incrementValue(incrementBy) {
+    const inputElement = document.getElementById('quantity');
+    let currentValue = parseInt(inputElement.value);
+    let newValue = currentValue + incrementBy;
+    inputElement.value = newValue;
+}
+
 function convertToFloat(value) {
     value = value.trim();
     value = value.replace('%', '');
@@ -182,4 +272,67 @@ function showAlertContainer() {
 
 function closeAlertContainer() {
     document.querySelector('.alert-container').style.display = 'none';
+}
+
+const numberMask = (input) => {
+    if (input.value.trim() === '') {
+        input.value = 0;
+    }
+
+    const inputId = input.id;
+
+    switch (inputId) {
+    case 'average-price':
+        doubleMask(input);
+        break;
+    case 'objective-percentage':
+        objectivePercentageMask(input);
+        break;
+    case 'quantity':
+        intMask(input);
+        break;
+    }
+}
+
+const objectivePercentageMask = (input) => {
+    let value = input.value.replace('.', '').replace(',', '').replace(/\D/g, '');
+  
+    let floatValue = Math.max(parseFloat(value) / 100, 0);
+    floatValue = Math.min(floatValue, 100);
+
+    const options = { minimumFractionDigits: 2 };
+    const result = new Intl.NumberFormat('pt-BR', options).format(floatValue);
+
+    input.value = result;
+}
+
+const doubleMask = (input) => {
+    let value = input.value.replace(/\D/g, '');
+    value = parseFloat(value) / 100;
+
+    const formattedValue = value.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 2,
+    });
+
+    input.value = formattedValue;
+}
+
+const intMask = (input) => {
+    let value = input.value.replace('.', '').replace(',', '').replace(/\D/g, '');
+    input.value = value;
+}
+
+const doubleMaskValue = (value) => {
+    value = value.replace(/\D/g, '');
+    value = parseFloat(value) / 100;
+
+    const formattedValue = value.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 2,
+    });
+
+    return formattedValue;
 }

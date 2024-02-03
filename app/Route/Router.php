@@ -5,11 +5,18 @@ use Exception;
 
 class Router
 {
-    public const CONTROLLER_NAMESPACE = 'AdasFinance\\Controller';
-    public const PUBLIC_ROUTES = [
+    private const CONTROLLER_NAMESPACE = 'AdasFinance\\Controller';
+    private const ROOT_NAMESPACE = __DIR__ . '../../../';
+
+    private const PUBLIC_ROUTES = [
         '/login_submit',
         '/signup',
         '/signup_submit'
+    ];
+    
+    private const FETCH_ROUTES = [
+        '/search_by_symbol',
+        '/asset_goal_percentage'
     ];
 
     public static function load(string $controller, string $action)
@@ -43,14 +50,16 @@ class Router
                
                 '/login' => fn () => self::load('UserController', 'login'),
                 '/signup' => fn () => self::load('UserController', 'signup'),
-                '/home' => fn () => self::load('AssetController', 'home'),
                 '/logout' => fn () => self::load('UserController', 'logout'),
+                '/home' => fn () => self::load('AssetController', 'home'),
+                '/search_by_symbol' => fn () => self::load('AssetController', 'searchBySymbol'),
                 // '/' => fn () => self::load('fazer 404'),
             ],
 
             'post' => [
                 '/login_submit' => fn () => self::load('UserController', 'loginSubmit'),
                 '/asset_goal_percentage' => fn () => self::load('AssetController', 'assetGoalPercentage'),
+                '/asset_save' => fn () => self::load('AssetController', 'assetSave'),
             ],
 
             'put' => [
@@ -67,36 +76,54 @@ class Router
     {
         try {
             $routes = self::routes();
-            $request = Request::get();
+            $requestMethod = Request::get();
             $uri = Uri::get('path');
 
-            if (!isset($routes[$request])) {
-                throw new Exception('Route not found');
-            }
-
-            if (!array_key_exists($uri, $routes[$request])) {
-                throw new Exception('Route not found');
-            }
-
-            if (!isset($_SESSION['user']) && !in_array($uri, self::PUBLIC_ROUTES)) {
-                $request = "get";  
-                $uri = '/login';
-            }
+            self::includeHeader($uri);
             
-            if (isset($_SESSION['user']) && $uri === '/login') {
-                $request = "get";
-                $uri = '/home';
+            if (!isset($routes[$requestMethod]) || !array_key_exists($uri, $routes[$requestMethod])) {
+                throw new Exception('Route not found');
             }
-
-            $router = $routes[$request][$uri];
-
+    
+            self::handleAuthenticationRedirects($requestMethod, $uri);
+            $router = $routes[$requestMethod][$uri];
+    
             if (!is_callable($router)) {
                 throw new Exception("Route {$uri} is not callable");
             }
-
+    
             $router();
+    
+            self::includeFooter($uri);
         } catch (\Throwable $th) {
             echo $th->getMessage();
+        }
+    }
+
+    private static function includeHeader($uri)
+    {
+        if (!in_array($uri, self::FETCH_ROUTES)) {
+            require_once self::ROOT_NAMESPACE . 'view/header.html';
+        }
+    }
+
+    private static function includeFooter($uri)
+    {
+        if (!in_array($uri, self::FETCH_ROUTES)) {
+            require_once self::ROOT_NAMESPACE . 'view/footer.html';
+        }
+    }
+
+    private static function handleAuthenticationRedirects(&$requestMethod, &$uri)
+    {
+        if (!isset($_SESSION['user']) && !in_array($uri, self::PUBLIC_ROUTES)) {
+            $requestMethod = "get";
+            $uri = '/login';
+        }
+
+        if (isset($_SESSION['user']) && $uri === '/login') {
+            $requestMethod = "get";
+            $uri = '/home';
         }
     }
 }

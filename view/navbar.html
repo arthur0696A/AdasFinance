@@ -3,26 +3,22 @@
 ?>
 <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
     <div class="container-fluid" style="margin: 0 2em 0 2em;">
-        <div class="col">
-            <a class="navbar-brand mt-2 mt-lg-0" href="home">
+        <div class="col-md-4 d-flex">
+            <a class="navbar-brand" href="home">
                 <img src="/assets/images/logo.png" style="width: 7em; height:3em;">
             </a>
         </div>
-        <div class="col text-center">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <button type="button" class="btn btn-primary" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#includeAsset">
-                        <span class="plus-symbol"><i class="fa-solid fa-plus"></i></span>
-                        Incluir Ativo
-                    </button>
-                </li>
-            </ul>
+        <div class="col-md-4 d-flex justify-content-center">
+            <button type="button" class="btn btn-primary" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#includeAsset">
+                <span class="plus-symbol"><i class="fa-solid fa-plus"></i></span>
+                Incluir Ativo
+            </button>
         </div>
-        <div class="d-flex align-items-center">
+        <div class="col-md-4 d-flex justify-content-end">
             <div class="dropdown">
                 <a
                     data-mdb-dropdown-init
-                    class="dropdown-toggle d-flex align-items-center hidden-arrow"
+                    class="dropdown-toggle hidden-arrow"
                     href="#"
                     id="navbarDropdownMenuAvatar"
                     role="button"
@@ -46,3 +42,4 @@
         </div>
     </div>
 </nav>
+

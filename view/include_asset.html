@@ -2,31 +2,53 @@
     <div class="modal fade" id="includeAsset" tabindex="-1" aria-labelledby="includeNewAsset" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="includeNewAsset">Incluir Ativo</h5>
-                <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                      <label for="asset-code" class="col-form-label">Código do Ativo:</label>
-                      <input type="text" class="form-control" id="asset-code" />
-                    </div>
-                    <div class="mb-3">
-                      <label for="quantity" class="col-form-label">Quantidade:</label>
-                      <input type="text" class="form-control" id="quantity" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="average-price" class="col-form-label">Preço Médio:</label>
-                        <input type="text" class="form-control" id="average-price" />
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" data-mdb-ripple-init>Salvar</button>
-            </div>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="includeNewAsset">Incluir Ativo</h5>
+                    <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="asset_save" method="post">
+                        <div class="mb-4" id="asset-info">
+                            <div class="form-outline me-2" data-mdb-input-init>
+                                <input type="search" name="asset-code" class="form-control text-input" id="autocomplete-asset-input" required/>
+                                <label for="asset-code" class="form-label">Código do Ativo</label>
+                            </div>
+                            <div class="form-outline" id="asset-name-block" data-mdb-input-init>
+                                <input type="text" name="asset-name" class="form-control text-input" id="asset-name" readonly>
+                                <label for="asset-name" class="form-label">Empresa</label>
+                            </div>
+                        </div>   
+                        <ul class="list-group mt-3" id="autocomplete-asset-list"></ul>
+                        <div class="collapse" id="collapse-form">
+                            <div class="d-flex mb-4" id="priceFieldsContainer">
+                                <div class="form-outline me-2" data-mdb-input-init>
+                                    <input type="text" name="average-price" class="form-control text-input double-mask" id="average-price" required/>
+                                    <label for="average-price" class="form-label">Preço Médio</label>
+                                </div>
+                                <div class="form-outline" data-mdb-input-init>
+                                    <input type="text" name="last-price" class="form-control text-input" id="last-price" readonly>
+                                    <label for="last-price" class="form-label">Preço Atual</label>
+                                </div>
+                            </div>
+                            <div class="mb-4 d-flex">
+                                <div class="form-outline me-2" data-mdb-input-init>
+                                    <input type="text" name="quantity" class="form-control text-input double-mask" id="quantity" required/>
+                                    <label for="quantity" class="form-label">Quantidade</label>
+                                </div>
+                                <div class="form-outline d-flex" data-mdb-input-init>
+                                    <button type="button" class="btn btn-primary flex-fill me-1" onclick="incrementValue(1)">+1</button>
+                                    <button type="button" class="btn btn-primary flex-fill me-1" onclick="incrementValue(10)">+10</button>
+                                    <button type="button" class="btn btn-primary flex-fill" onclick="incrementValue(100)">+100</button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary" data-mdb-ripple-init>Salvar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    </div>    
 </html>
