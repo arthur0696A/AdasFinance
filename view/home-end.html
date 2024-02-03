@@ -1,4 +1,11 @@
 </tbody>
+<?php if (!isset($asset)): ?>
+    <td colspan="10">
+        <div class="text-center mt-3">
+            <p>Nenhum ativo cadastrado...</p>
+        </div>
+    </td>    
+<?php endif; ?>
 </table>
 <div class="message-container success-container">
     <i class="fa-solid fa-circle-check"></i>
