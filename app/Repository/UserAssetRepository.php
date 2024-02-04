@@ -1,6 +1,7 @@
 <?php
 namespace AdasFinance\Repository;
 
+use AdasFinance\Entity\UserAsset;
 use AdasFinance\Trait\RepositoryTrait;
 
 class UserAssetRepository implements RepositoryInterface
@@ -68,6 +69,56 @@ class UserAssetRepository implements RepositoryInterface
         $params = [
             ':value' => str_replace(',', '.', $parameters->newObjectivePercentageValue),
             ':id' => $parameters->userAssetId
+        ];
+
+        return $this->query($sql, $params);
+    }
+
+    public function insert(UserAsset $userAsset)
+    {
+        $sql = "INSERT
+        INTO
+            UserAsset(
+            user_id,
+            asset_id,
+            average_price,
+            quantity,
+            percentage_goal
+        )
+        VALUES(
+            :userId,
+            :assetId,
+            :averagePrice,
+            :quantity,
+            0.00
+        )";
+        
+        $params = [
+            ':userId' => $userAsset->getUserId(),
+            ':assetId' => $userAsset->getAssetId(),
+            ':averagePrice' => $userAsset->getAveragePrice(),
+            ':quantity' => $userAsset->getQuantity(),
+        ];
+
+        return $this->query($sql, $params);
+    }
+
+    public function getAssetByUserAndAssetId(UserAsset $userAsset)
+    {
+        $sql = "SELECT *
+        FROM
+            UserAsset ua
+        JOIN Asset a ON
+            ua.asset_id = a.id
+        JOIN User u ON
+            ua.user_id = u.id
+        WHERE
+            ua.asset_id = :assetId
+            AND ua.user_id = :userId";
+        
+        $params = [
+            ':assetId' => $userAsset->getAssetId(),
+            ':userId' => $userAsset->getUserId(),
         ];
 
         return $this->query($sql, $params);

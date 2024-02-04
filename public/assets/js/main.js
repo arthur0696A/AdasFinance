@@ -147,6 +147,7 @@ async function addEventListeners() {
             const listItem = document.createElement('li');
             listItem.classList.add('list-group-item');
             listItem.innerText = `${item.symbol} - ${item.name}`;
+            listItem.dataset.id = item.id;
             listItem.dataset.symbol = item.symbol;
             listItem.dataset.name = item.name;
             listItem.dataset.lastPrice = item.lastPrice;
@@ -154,18 +155,20 @@ async function addEventListeners() {
         });
     });
 
+    const assetIdElement = document.getElementById('asset-id');
+    const lastPriceElement = document.getElementById('last-price');
+    const assetNameElement = document.getElementById('asset-name');
+    const averagePriceElement = document.getElementById('average-price');
+    const quantityElement = document.getElementById('quantity');
+
     autocompleteAssetList.addEventListener('click', (event) => {
+        const selectedAssetId = event.target.dataset.id;
         const selectedSymbol = event.target.dataset.symbol;
         const selectedName = event.target.dataset.name;
         const selectedLastPrice = doubleMaskValue(event.target.dataset.lastPrice);
 
-        const lastPriceElement = document.getElementById('last-price');
-        const assetNameElement = document.getElementById('asset-name');
-        const averagePrice = document.getElementById('average-price');
-        const quantity = document.getElementById('quantity');
-        
-        numberMask(averagePrice);
-        numberMask(quantity);
+        numberMask(averagePriceElement);
+        numberMask(quantityElement);
 
         const assetInfo = document.getElementById('asset-info');
         const assetNameBlock = document.getElementById('asset-name-block');
@@ -175,7 +178,8 @@ async function addEventListeners() {
         autocompleteAssetList.innerHTML = '';
         autocompleteAssetInput.value = selectedSymbol;
     
-        if (selectedSymbol && selectedName && selectedLastPrice) {
+        if (selectedAssetId && selectedSymbol && selectedName && selectedLastPrice) {
+            assetIdElement.value = selectedAssetId;
             lastPriceElement.value = selectedLastPrice;
             assetNameElement.value = selectedName;
 
@@ -185,10 +189,17 @@ async function addEventListeners() {
 
             lastPriceElement.dispatchEvent(inputEvent);
             assetNameElement.dispatchEvent(inputEvent);
-            averagePrice.dispatchEvent(inputEvent);
-            quantity.dispatchEvent(inputEvent);
+            averagePriceElement.dispatchEvent(inputEvent);
+            quantityElement.dispatchEvent(inputEvent);
         }
     });
+
+    const userAssetSaveForm = document.getElementById('user-asset-save');
+    userAssetSaveForm.addEventListener('submit', () => {
+        removeNumberMask(averagePriceElement);
+        removeNumberMask(quantityElement);
+    });
+
 }
 
 async function searchBySymbol(symbol) {
@@ -200,7 +211,8 @@ async function searchBySymbol(symbol) {
         if (response.ok) {
             const data = await response.json();
             const resultArray = data.data.map(
-                item => ({ 
+                item => ({
+                    id: item.id,
                     symbol: item.symbol, 
                     name: item.name, 
                     lastPrice: item.last_price 
@@ -228,7 +240,7 @@ async function saveNewObjectivePercentageValue(userAssetId, value) {
         }),
     }
 
-    return fetch('http://localhost:8000/asset_goal_percentage', options)
+    return fetch('http://localhost:8000/user_asset_goal_percentage', options)
         .then(response => {
             if (response.ok) {
                 showSuccessContainer();
@@ -335,4 +347,37 @@ const doubleMaskValue = (value) => {
     });
 
     return formattedValue;
+}
+
+const removeNumberMask = (input) => {
+    const inputId = input.id;
+
+    switch (inputId) {
+        case 'last-price':
+        case 'average-price':
+            return removeDoubleMask(input);
+        case 'objective-percentage':
+            return removeObjectivePercentageMask(input);
+        case 'quantity':
+            return removeIntMask(input);
+        default:
+            return input.value;
+    }
+}
+
+const removeObjectivePercentageMask = (input) => {
+    let numericValue = input.value.replace(/[^\d.]/g, '');
+    let floatValue = Math.max(parseFloat(numericValue) / 100, 0);
+    floatValue = Math.min(floatValue, 100);
+    input.value = floatValue;
+}
+
+const removeDoubleMask = (input) => {
+    let numericValue = input.value.replace(/[^\d.]/g, '');
+    input.value = parseFloat(numericValue) / 100;
+}
+
+const removeIntMask = (input) => {
+    let numericValue = input.value.replace(/[^\d]/g, '');
+    input.value = parseInt(numericValue, 10);
 }
