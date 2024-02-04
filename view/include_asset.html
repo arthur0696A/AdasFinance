@@ -7,7 +7,7 @@
                     <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="asset_save" method="post">
+                    <form id="user-asset-save" action="user_asset_save" method="post">
                         <div class="mb-4" id="asset-info">
                             <div class="form-outline me-2" data-mdb-input-init>
                                 <input type="search" name="asset-code" class="form-control text-input" id="autocomplete-asset-input" required/>
@@ -17,6 +17,7 @@
                                 <input type="text" name="asset-name" class="form-control text-input" id="asset-name" readonly>
                                 <label for="asset-name" class="form-label">Empresa</label>
                             </div>
+                            <input type="hidden" id="asset-id" name="asset-id" />
                         </div>   
                         <ul class="list-group mt-3" id="autocomplete-asset-list"></ul>
                         <div class="collapse" id="collapse-form">

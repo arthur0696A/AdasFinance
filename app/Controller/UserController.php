@@ -22,9 +22,9 @@ class UserController
         require_once '../view/signup.html';
     }
 
-    public function signupSubmitAction()
+    public function signupSubmitAction($parameters)
     {
-        $parameters = $this->validateNoFieldsMissing();
+        $this->validateNoFieldsMissing($parameters);
         $result = $this->userRepository->saveUser($parameters);
 
         if($result['status'] === 'success') {

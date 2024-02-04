@@ -16,7 +16,7 @@ class Router
     
     private const FETCH_ROUTES = [
         '/search_by_symbol',
-        '/asset_goal_percentage'
+        '/user_asset_goal_percentage'
     ];
 
     public static function load(string $controller, string $action)
@@ -51,19 +51,20 @@ class Router
                 '/login' => fn () => self::load('UserController', 'login'),
                 '/signup' => fn () => self::load('UserController', 'signup'),
                 '/logout' => fn () => self::load('UserController', 'logout'),
-                '/home' => fn () => self::load('AssetController', 'home'),
+                '/home' => fn () => self::load('UserAssetController', 'home'),
                 '/search_by_symbol' => fn () => self::load('AssetController', 'searchBySymbol'),
                 // '/' => fn () => self::load('fazer 404'),
             ],
 
             'post' => [
                 '/login_submit' => fn () => self::load('UserController', 'loginSubmit'),
-                '/asset_goal_percentage' => fn () => self::load('AssetController', 'assetGoalPercentage'),
-                '/asset_save' => fn () => self::load('AssetController', 'assetSave'),
+                '/signup_submit' => fn () => self::load('UserController', 'signupSubmit'),
+                '/user_asset_goal_percentage' => fn () => self::load('UserAssetController', 'userAssetGoalPercentage'),
+                '/user_asset_save' => fn () => self::load('UserAssetController', 'userAssetSave'),
             ],
 
             'put' => [
-                '/signup_submit' => fn () => self::load('UserController', 'signupSubmit'),
+                
             ],
 
             'delete' => [

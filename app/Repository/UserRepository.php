@@ -17,14 +17,14 @@ class UserRepository implements RepositoryInterface
         return $this->query($sql, $params);
     }
 
-    public function saveUser(array $parameters)
+    public function saveUser($parameters)
     {
         $sql = "INSERT INTO User (name, email, username, password) VALUES (:name, :email, :username, :password)"; 
         $params = [
-            ':name' => $parameters['name'],
-            ':email' => $parameters['email'],
-            ':username' => $parameters['username'],
-            ':password' => password_hash($parameters['password'], PASSWORD_DEFAULT),
+            ':name' => $parameters->name,
+            ':email' => $parameters->email,
+            ':username' => $parameters->username,
+            ':password' => password_hash($parameters->password, PASSWORD_DEFAULT),
         ];
 
         return $this->query($sql, $params);
