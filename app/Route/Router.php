@@ -68,7 +68,7 @@ class Router
             ],
 
             'delete' => [
-
+                '/user_asset_delete' => fn () => self::load('UserAssetController', 'userAssetDelete'),
             ],
         ] ;
     }

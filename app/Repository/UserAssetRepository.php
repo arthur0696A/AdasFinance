@@ -103,6 +103,17 @@ class UserAssetRepository implements RepositoryInterface
         return $this->query($sql, $params);
     }
 
+    public function delete($id)
+    {
+        $sql = "DELETE FROM UserAsset WHERE id = :id";
+        
+        $params = [
+            ':id' => $id
+        ];
+
+        return $this->query($sql, $params);
+    }
+
     public function getAssetByUserAndAssetId(UserAsset $userAsset)
     {
         $sql = "SELECT *

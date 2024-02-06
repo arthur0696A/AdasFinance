@@ -6,19 +6,16 @@
     height: 4em !important;
 }
 
-.circle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.2em;
-    height: 2.2em;
-    border-radius: 50%;
-    margin-right: 10px;
+.icon-container {
+    display: flex;
 }
 
-.circle i {
-    color: #ffffff;
-    font-size: 1.8em;
+.icon-container div {
+    margin-right: 12px;
+}
+
+.icon-container i {
+    font-size: 22px;
 }
 
 .objective-percentage {
@@ -136,4 +133,19 @@ body {
 
 #asset-name-block {
     display: none;
+}
+
+.btn-buy {
+    background-color: green !important;
+    color: white !important;
+}
+
+.btn-sell {
+    background-color: #d04955 !important;
+    color: white !important;
+}
+
+.btn-default {
+    background-color: #e0e0e0 !important;
+    color: #757575 !important;
 }

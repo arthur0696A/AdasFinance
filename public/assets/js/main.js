@@ -16,7 +16,7 @@ function formatTable() {
         let spanParentNode = span.parentNode;
         let icon = spanParentNode.querySelector('i');
 
-        if(spanValue > 0) {
+        if (spanValue > 0) {
             spanParentNode.classList.add('text-success');
             icon.classList.add('fa-caret-up');
         } else if (spanValue == 0) {
@@ -56,7 +56,7 @@ function calculateObjectivePercentageDifference() {
         icon.classList.remove('fa-caret-up', 'fa-minus', 'fa-caret-down');
         badge.classList.remove('badge-success', 'badge-secondary', 'badge-danger');
 
-        if(percentageDiff > 0) {
+        if (percentageDiff > 0) {
             spanDifference.classList.add('text-success');
             icon.classList.add('fa-caret-up');
             badge.classList.add('badge-danger');
@@ -200,6 +200,37 @@ async function addEventListeners() {
         removeNumberMask(quantityElement);
     });
 
+    const removeAssetButtons = document.querySelectorAll('.remove-asset');
+    removeAssetButtons.forEach((button) => {
+        button.addEventListener('click', async () => {
+            
+            Swal.fire({
+                title: "Deseja excluir o ativo?",
+                text: "Isso deletará o ativo e todo o histórico de transações registrado da sua carteira!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sim, excluir ativo!",
+                cancelButtonText: "Cancelar"
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const userAssetId = button.getAttribute('data-user-asset-id');
+                    try {
+                        await deleteUserAsset(userAssetId);
+                        location.reload(true);
+                    } catch (error) {
+                        Swal.fire({
+                            title: "Erro!",
+                            text: "Um erro aconteceu ao tentar deletar este ativo.",
+                            icon: "error"
+                        });
+                    }
+                }
+            });
+
+        });
+    });
 }
 
 async function searchBySymbol(symbol) {
@@ -254,11 +285,36 @@ async function saveNewObjectivePercentageValue(userAssetId, value) {
         });
 }
 
+async function deleteUserAsset(userAssetId) {
+    const options = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            userAssetId: userAssetId
+        }),
+    }
+
+    return fetch('http://localhost:8000/user_asset_delete', options);
+}
+
 function incrementValue(incrementBy) {
     const inputElement = document.getElementById('quantity');
     let currentValue = parseInt(inputElement.value);
     let newValue = currentValue + incrementBy;
     inputElement.value = newValue;
+}
+
+function toggleButtons(selected, other) {
+    document.getElementById(selected).checked = true;
+    document.getElementById(other).checked = false;
+
+    document.querySelector('label[for="' + selected + '"]').classList.add(`btn-${selected}`);
+    document.querySelector('label[for="' + selected + '"]').classList.remove(`btn-${other}`, 'btn-default');
+
+    document.querySelector('label[for="' + other + '"]').classList.add('btn-default');
+    document.querySelector('label[for="' + other + '"]').classList.remove('btn-buy', 'btn-sell');
 }
 
 function convertToFloat(value) {
