@@ -1,0 +1,37 @@
+<html>
+    <div class="modal fade" id="transaction" tabindex="-1" aria-labelledby="newTransaction" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newTransaction">Adicionar Transação</h5>
+                    <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="register-transaction" action="register-transaction" method="post">
+                        <div class="mb-4 mt-1">
+                            <div class="btn-group col-md-12">
+                                <input type="radio" class="btn-check" name="options" id="buy" autocomplete="off" checked />
+                                <label class="btn btn-secondary btn-default" for="buy" onclick="toggleButtons('buy', 'sell')">Comprar</label>
+                              
+                                <input type="radio" class="btn-check" name="options" id="sell" autocomplete="off" />
+                                <label class="btn btn-secondary btn-default" for="sell" onclick="toggleButtons('sell', 'buy')">Vender</label>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-4 mt-1" id="asset-info">
+                            <div class="form-outline me-2" data-mdb-input-init>
+                                <input type="text" name="asset-code" class="form-control text-input" id="autocomplete-asset-input" readonly/>
+                                <label for="asset-code" class="form-label">Código do Ativo</label>
+                            </div>
+                            <div class="form-outline" data-mdb-input-init>
+                                <input type="text" name="asset-name" class="form-control text-input" id="asset-name" readonly>
+                                <label for="asset-name" class="form-label">Empresa</label>
+                            </div>
+                            <input type="hidden" id="asset-id" name="asset-id" />
+                        </div>   
+                        <?php include('user-asset.html'); ?>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>    
+</html>

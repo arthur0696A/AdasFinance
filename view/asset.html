@@ -1,3 +1,6 @@
+<?php
+    include 'transaction.html';      
+?>
 <tr>
     <td>
         <div class="d-flex align-items-center">
@@ -68,11 +71,17 @@
         <span class="badge rounded-pill d-inline" data-user-asset-id='<?php echo $asset["id"]; ?>' style="font-size: 1em;"></span>
     </td>
     <td class="ms-auto">
-        <div class="circle" style="background-color: #43A047;">
-            <i class="fa-solid fa-plus"></i>
-        </div>
-        <div class="circle" style="background-color: #E53935;">
-            <i class="fa-solid fa-minus"></i>
+        <div class="icon-container">
+            <div>
+                <a data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#transaction" data-mdb-tooltip-init title="Adicionar Transação" role="button">
+                    <i class="fas fa-money-bill-transfer" style="color: #1b7e32;"></i>
+                </a>
+            </div>
+            <div>
+                <a class="remove-asset" data-user-asset-id='<?php echo $asset["id"]; ?>' data-mdb-tooltip-init title="Excluir Ativo" role="button">
+                    <i class="fas fa-square-xmark" style="color: #b63e48;"></i>
+                </a>
+            </div>
         </div>
     </td>
 </tr>
