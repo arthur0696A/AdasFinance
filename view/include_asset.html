@@ -21,7 +21,31 @@
                         </div>   
                         <ul class="list-group mt-3" id="autocomplete-asset-list"></ul>
                         <div class="collapse" id="collapse-form">
-                            <?php include('user-asset.html'); ?>
+                            <div class="d-flex mb-4">
+                                <div class="form-outline me-2" data-mdb-input-init>
+                                    <input type="text" name="average-price" class="form-control text-input double-mask" id="average-price" required/>
+                                    <label for="average-price" class="form-label">Preço Médio</label>
+                                </div>
+                                <div class="form-outline" data-mdb-input-init>
+                                    <input type="text" name="last-price" class="form-control text-input" id="last-price" readonly>
+                                    <label for="last-price" class="form-label">Preço Atual</label>
+                                </div>
+                            </div>
+                            <div class="mb-4 d-flex">
+                                <div class="form-outline me-2" data-mdb-input-init>
+                                    <input type="text" name="quantity" class="form-control text-input double-mask" id="quantity" required/>
+                                    <label for="quantity" class="form-label">Quantidade</label>
+                                </div>
+                                <div class="form-outline d-flex" data-mdb-input-init>
+                                    <button type="button" class="btn btn-primary flex-fill me-1" onclick="incrementValue(1)">+1</button>
+                                    <button type="button" class="btn btn-primary flex-fill me-1" onclick="incrementValue(10)">+10</button>
+                                    <button type="button" class="btn btn-primary flex-fill" onclick="incrementValue(100)">+100</button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary" data-mdb-ripple-init>Salvar</button>
+                            </div>
                         </div>
                     </form>
                 </div>

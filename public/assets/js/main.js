@@ -161,6 +161,8 @@ async function addEventListeners() {
     const averagePriceElement = document.getElementById('average-price');
     const quantityElement = document.getElementById('quantity');
 
+    const inputEvent = new Event('input', { bubbles: true });
+
     autocompleteAssetList.addEventListener('click', (event) => {
         const selectedAssetId = event.target.dataset.id;
         const selectedSymbol = event.target.dataset.symbol;
@@ -172,8 +174,6 @@ async function addEventListeners() {
 
         const assetInfo = document.getElementById('asset-info');
         const assetNameBlock = document.getElementById('asset-name-block');
-
-        const inputEvent = new Event('input', { bubbles: true });
 
         autocompleteAssetList.innerHTML = '';
         autocompleteAssetInput.value = selectedSymbol;
@@ -229,6 +229,26 @@ async function addEventListeners() {
                 }
             });
 
+        });
+    });
+
+    const transactionAssetSymbolElement = document.getElementById('asset-symbol-transaction');
+    const transactionAssetNameElement = document.getElementById('asset-name-transaction');
+    const transactionAveragePriceElement = document.getElementById('average-price-transaction');
+    const transactionAssetDate = document.getElementById('asset-transaction-date');
+
+    const newTransactionElements = document.querySelectorAll('.new-transaction');
+    newTransactionElements.forEach((button) => {
+        button.addEventListener('click', () => {
+            let userAssetId = button.getAttribute('data-user-asset-id');
+            
+            transactionAssetSymbolElement.value = document.getElementById(`symbol-${userAssetId}`).textContent;
+            transactionAssetNameElement.value = document.getElementById(`name-${userAssetId}`).textContent;
+
+            // transactionAssetSymbolElement.dispatchEvent(inputEvent);
+            // transactionAssetNameElement.dispatchEvent(inputEvent);
+            // transactionAveragePriceElement.dispatchEvent(inputEvent);
+            // transactionAssetDate.dispatchEvent(inputEvent);
         });
     });
 }
