@@ -8,20 +8,20 @@
                 <i class="fa-solid fa-chevron-down"></i>
             </div>
             <div class="ms-3">
-                <p class="fw-bold mb-1"><?php echo $asset["symbol"]; ?></p>
-                <p class="text-muted mb-0"><?php echo $asset["name"]; ?></p>
+                <p id="symbol-<?php echo $asset['id']; ?>" class="fw-bold mb-1"><?php echo $asset["symbol"]; ?></p>
+                <p id="name-<?php echo $asset['id']; ?>" class="text-muted mb-0"><?php echo $asset["name"]; ?></p>
             </div>
         </div>
     </td>
     <td>
         <?php echo $asset["quantity"]; ?>
     </td>
-    <td >
+    <td>
         R$ <?php echo $asset["average_price"]; ?>
     </td>
     <td>
         <div class="primary-value">
-            <span>
+            <span id="last-price-<?php echo $asset["id"]; ?>">
                 R$ <?php echo $asset["last_price"]; ?>
             </span>
         </div>
@@ -73,7 +73,7 @@
     <td class="ms-auto">
         <div class="icon-container">
             <div>
-                <a data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#transaction" data-mdb-tooltip-init title="Adicionar Transação" role="button">
+                <a class="new-transaction" data-user-asset-id='<?php echo $asset["id"]; ?>' data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#transaction" data-mdb-tooltip-init title="Adicionar Transação" role="button">
                     <i class="fas fa-money-bill-transfer" style="color: #1b7e32;"></i>
                 </a>
             </div>
