@@ -8,6 +8,7 @@
                 <i class="fa-solid fa-chevron-down"></i>
             </div>
             <div class="ms-3">
+                <input type="hidden" id="asset-id-<?php echo $asset['id']; ?>" value="<?php echo $asset['asset_id']; ?>"/>
                 <p id="symbol-<?php echo $asset['id']; ?>" class="fw-bold mb-1"><?php echo $asset["symbol"]; ?></p>
                 <p id="name-<?php echo $asset['id']; ?>" class="text-muted mb-0"><?php echo $asset["name"]; ?></p>
             </div>

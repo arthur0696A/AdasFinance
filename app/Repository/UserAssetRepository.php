@@ -2,11 +2,29 @@
 namespace AdasFinance\Repository;
 
 use AdasFinance\Entity\UserAsset;
+use AdasFinance\Service\CamelCaseConverter;
 use AdasFinance\Trait\RepositoryTrait;
+use stdClass;
 
 class UserAssetRepository implements RepositoryInterface
 {
     use RepositoryTrait;
+
+    public function getById(int $id)
+    {
+        $sql = "SELECT *
+        FROM
+            UserAsset ua
+        WHERE
+            ua.asset_id = :id";
+        
+        $params = [
+            ':id' => $id
+        ];
+
+        $result = $this->query($sql, $params);
+        return UserAsset::createFromParams($result['data']);
+    }
 
     public function getAssetsByUserId(int $id) 
     {
@@ -100,7 +118,19 @@ class UserAssetRepository implements RepositoryInterface
             ':quantity' => $userAsset->getQuantity(),
         ];
 
-        return $this->query($sql, $params);
+
+        $this->query($sql, $params);
+
+        $lastInsertId = $this->pdo->lastInsertId();
+    
+        $query = "SELECT * FROM UserAsset WHERE id = :lastInsertId";
+        $result = $this->query($query, [':lastInsertId' => $lastInsertId]);
+    
+        if (!empty($result['data'])) {
+            return self::castToObject($result['data'][0]);
+        }
+    
+        return null;
     }
 
     public function delete($id)
@@ -114,9 +144,9 @@ class UserAssetRepository implements RepositoryInterface
         return $this->query($sql, $params);
     }
 
-    public function getAssetByUserAndAssetId(UserAsset $userAsset)
+    public function getAssetByUserAndAssetId(int $userId, int $assetId): UserAsset
     {
-        $sql = "SELECT *
+        $sql = "SELECT ua.*
         FROM
             UserAsset ua
         JOIN Asset a ON
@@ -128,10 +158,12 @@ class UserAssetRepository implements RepositoryInterface
             AND ua.user_id = :userId";
         
         $params = [
-            ':assetId' => $userAsset->getAssetId(),
-            ':userId' => $userAsset->getUserId(),
+            ':assetId' => $assetId,
+            ':userId' => $userId,
         ];
 
-        return $this->query($sql, $params);
+        $result = $this->query($sql, $params);
+
+        return self::castToObject($result['data'][0]);
     }
 }

@@ -61,6 +61,7 @@ class Router
                 '/signup_submit' => fn () => self::load('UserController', 'signupSubmit'),
                 '/user_asset_goal_percentage' => fn () => self::load('UserAssetController', 'userAssetGoalPercentage'),
                 '/user_asset_save' => fn () => self::load('UserAssetController', 'userAssetSave'),
+                '/register_transaction' => fn () => self::load('UserAssetController', 'registerTransaction'),
             ],
 
             'put' => [

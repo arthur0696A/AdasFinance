@@ -7,13 +7,13 @@
                     <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="register-transaction" action="register-transaction" method="post">
+                    <form id="register-transaction" action="register_transaction" method="post">
                         <div class="mb-4 mt-1">
                             <div class="btn-group col-md-12">
-                                <input type="radio" class="btn-check" name="options" id="buy" autocomplete="off" />
+                                <input type="radio" class="btn-check" name="transaction-type-id" id="buy" autocomplete="off" value="1"/>
                                 <label class="btn btn-secondary btn-default" for="buy" onclick="toggleButtons('buy', 'sell')">Comprar</label>
                               
-                                <input type="radio" class="btn-check" name="options" id="sell" autocomplete="off" />
+                                <input type="radio" class="btn-check" name="transaction-type-id" id="sell" autocomplete="off" value="2" />
                                 <label class="btn btn-secondary btn-default" for="sell" onclick="toggleButtons('sell', 'buy')">Vender</label>
                             </div>
                         </div>
@@ -26,22 +26,22 @@
                                 <input type="text" name="asset-name" class="form-control text-input" id="asset-name-transaction" readonly />
                                 <label for="asset-name" class="form-label">Empresa</label>
                             </div>
-                            <input type="hidden" id="asset-id" name="asset-id" />
+                            <input type="hidden" id="asset-id-transaction" name="asset-id" />
                         </div>
                         <div class="d-flex mb-4">
                             <div class="form-outline me-2" data-mdb-input-init>
-                                <input type="text" name="average-price-transaction" class="form-control text-input double-mask" id="average-price-transaction" required/>
-                                <label for="average-price-transaction" class="form-label">Preço Médio</label>
+                                <input type="text" name="price" class="form-control text-input double-mask" id="average-price-transaction" required/>
+                                <label for="price" class="form-label">Preço Médio</label>
                             </div>
                             <div class="form-outline" id="asset-transaction-date-block" data-mdb-input-init>
-                                <input type="date" name="asset-transaction-date" lang="pt-BR" class="form-control text-input" id="asset-transaction-date" />
-                                <label for="asset-transaction-date" class="form-label">Data da Transação</label>
+                                <input type="date" name="transaction-date" lang="pt-BR" class="form-control text-input" id="date-transaction" />
+                                <label for="transaction-date" class="form-label">Data da Transação</label>
                             </div>
                         </div>
                         <div class="mb-4 d-flex">
                             <div class="form-outline me-2" data-mdb-input-init>
-                                <input type="text" name="quantity-transaction" class="form-control text-input double-mask" id="quantity-transaction" required/>
-                                <label for="quantity-transaction" class="form-label">Quantidade</label>
+                                <input type="text" name="quantity" class="form-control text-input double-mask" id="quantity-transaction" required/>
+                                <label for="quantity" class="form-label">Quantidade</label>
                             </div>
                             <div class="form-outline d-flex" data-mdb-input-init>
                                 <button type="button" class="btn btn-primary flex-fill me-1" onclick="incrementValue(1)">+1</button>

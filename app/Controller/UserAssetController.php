@@ -1,8 +1,10 @@
 <?php
 namespace AdasFinance\Controller;
 
+use AdasFinance\Entity\Transaction;
 use AdasFinance\Entity\UserAsset;
 use AdasFinance\Repository\UserAssetRepository;
+use AdasFinance\Repository\TransactionRepository;
 use AdasFinance\Service\AssetTransactionManager;
 use AdasFinance\Service\CamelCaseConverter;
 use Exception;
@@ -66,7 +68,21 @@ class UserAssetController
         $parameters->userId = $_SESSION['user']->getId();
         $userAsset = UserAsset::createFromParams($parameters);
 
-        $result = $this->assetTransactionManager->buy($userAsset);
+        $result = $this->assetTransactionManager->create($userAsset);
+        
+        echo json_encode(['success' => true, 'message' => 'Dados cadastrados com sucesso']);
+
+        header('Location: home');
+        exit;
+    }
+
+    public function registerTransactionAction($parameters)
+    {
+        $parameters = CamelCaseConverter::convertToCamelCase($parameters);
+        $parameters->userId = $_SESSION['user']->getId();
+        $transaction = Transaction::createFromParams($parameters);
+
+        $result = $this->assetTransactionManager->registerTransaction($transaction);
         
         echo json_encode(['success' => true, 'message' => 'Dados cadastrados com sucesso']);
 

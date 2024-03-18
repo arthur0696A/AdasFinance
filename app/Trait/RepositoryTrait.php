@@ -1,17 +1,22 @@
 <?php
 namespace AdasFinance\Trait;
 
+use AdasFinance\Service\CamelCaseConverter;
 use AdasFinance\Service\ConnectionCreator;
+use AdasFinance\Entity\UserAsset;
 use PDO;
 use PDOException;
+use stdClass;
 
 trait RepositoryTrait {
+
+    private PDO $pdo;
 
     public function query($sql, $params = [])
     {   
         try {
-            $connection = ConnectionCreator::getConnection();
-            $stmt = $connection->prepare($sql);
+            $this->pdo = ConnectionCreator::getConnection();
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute($params);
 
             $results = $stmt->fetchAll(PDO::FETCH_CLASS);
@@ -26,6 +31,13 @@ trait RepositoryTrait {
                 'data' => $err->getMessage()
             ];
         }
+    }
+
+    private static function castToObject(stdClass $object)
+    {
+        $userAsset = CamelCaseConverter::convertToCamelCase($object);
+
+        return UserAsset::createFromParams($userAsset);
     }
 }
 
