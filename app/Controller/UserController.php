@@ -45,8 +45,8 @@ class UserController
     {    
         $this->validateNoFieldsMissing($parameters);
 
-        $result = $this->userRepository->getUserByUsername($parameters->username);
-        $user = $this->validateLogin($result, $parameters->password);
+        $user = $this->userRepository->getUserByUsername($parameters->username);
+        $this->validateLogin($user, $parameters->password);
         
         $_SESSION['user'] = $user;
         header('Location: home');
@@ -69,27 +69,19 @@ class UserController
         }
     }
 
-    private function validateLogin(array $result, string $password)
-    {
-        if($result['status'] === 'error') {
-            header('Location: 404');
-            exit;
-        }
-        
-        if(count($result['data']) === 0) {
+    private function validateLogin(?User $user = null, string $password)
+    {   
+        if(!$user) {
             $_SESSION['error'] = 'Usuário ou senha inválidos';
             header('Location: login');
             exit;
         }
         
-        if(!password_verify($password, $result['data'][0]->password)) {
+        if(!password_verify($password, $user->getPassword())) {
             $_SESSION['error'] = 'Usuário ou senha inválidos';
             header('Location: login');
             exit;
         }
-
-        $userArray = json_decode(json_encode($result['data'][0]), true);
-        $user = new User($userArray);
 
         return $user;
     }

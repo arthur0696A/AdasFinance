@@ -232,6 +232,7 @@ async function addEventListeners() {
         });
     });
 
+    const transactionAssetIdElement = document.getElementById('asset-id-transaction');
     const transactionAssetSymbolElement = document.getElementById('asset-symbol-transaction');
     const transactionAssetNameElement = document.getElementById('asset-name-transaction');
     const transactionAveragePriceElement = document.getElementById('average-price-transaction');
@@ -242,6 +243,7 @@ async function addEventListeners() {
         button.addEventListener('click', () => {
             let userAssetId = button.getAttribute('data-user-asset-id');
             
+            transactionAssetIdElement.value = document.getElementById(`asset-id-${userAssetId}`).value;
             transactionAssetSymbolElement.value = document.getElementById(`symbol-${userAssetId}`).textContent;
             transactionAssetNameElement.value = document.getElementById(`name-${userAssetId}`).textContent;
 

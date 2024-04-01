@@ -8,11 +8,17 @@
                 <img src="/assets/images/logo.png" style="width: 7em; height:3em;">
             </a>
         </div>
-        <div class="col-md-4 d-flex justify-content-center">
+        <div class="col-md-2 d-flex justify-content-center">
             <button type="button" class="btn btn-primary" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#includeAsset">
                 <i class="fa-solid fa-plus"></i>
                 Incluir Ativo
             </button>
+        </div>
+        <div class="col-md-2 d-flex justify-content-center">
+            <div class="d-flex flex-column align-items-center">
+                <div><strong>Balanço Total</strong></div>
+                <div><strong>R$ <?php echo number_format($_SESSION['user']->getTotalBalance(), 2, ',', '.') ?></strong></div>
+            </div>
         </div>
         <div class="col-md-4 d-flex justify-content-end">
             <div class="dropdown">

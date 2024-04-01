@@ -1,11 +1,42 @@
 <?php
 namespace AdasFinance\Repository;
 
+use AdasFinance\Entity\User;
 use AdasFinance\Trait\RepositoryTrait;
 
 class UserRepository implements RepositoryInterface
 {
     use RepositoryTrait;
+
+    public function getById(int $id)
+    {
+        $sql = "SELECT * FROM User WHERE id = :id"; 
+        $params = [
+            ':id' => $id
+        ];
+
+        $result = $this->query($sql, $params);
+
+        return self::castToObject($result['data'][0], 'User');
+
+    }
+
+    public function update(User $user)
+    {
+        $sql = "UPDATE
+        User
+        SET
+            total_balance = :total_balance
+        WHERE
+            id = :id";
+        
+        $params = [
+            ':id' => $user->getId(),
+            ':total_balance' => $user->getTotalBalance(),
+        ];
+
+        $this->query($sql, $params);
+    }
 
     public function getUserByUsername(string $username) 
     {
@@ -14,7 +45,10 @@ class UserRepository implements RepositoryInterface
             ':user' => $username
         ];
 
-        return $this->query($sql, $params);
+        $result = $this->query($sql, $params);
+
+        return self::castToObject($result['data'][0], 'User');
+
     }
 
     public function saveUser($parameters)

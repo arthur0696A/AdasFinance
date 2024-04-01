@@ -28,7 +28,7 @@ class UserAsset {
     public static function createFromParams(stdClass $params): self 
     {
         return new self(
-            self::convertToType($params->userAssetId, 'int'),
+            $params->id ?? self::convertToType($params->userAssetId, 'int'),
             self::convertToType($params->userId, 'int'),
             self::convertToType($params->assetId, 'int'),
             self::convertToType($params->averagePrice, 'float'),

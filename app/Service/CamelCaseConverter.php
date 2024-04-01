@@ -20,7 +20,7 @@ class CamelCaseConverter
     }
 
     private static function convertKeyToCamelCase($key) {
-        $parts = explode('-', $key);
+        $parts = preg_split('/[-_]/', $key);
         $parts = array_map('ucfirst', $parts);
 
         return lcfirst(implode('', $parts));
