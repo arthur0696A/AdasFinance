@@ -40,4 +40,5 @@ class TransactionRepository implements RepositoryInterface
 
         return $this->query($sql, $params);
     }
+
 }

@@ -41,7 +41,7 @@ class UserAssetController
             foreach ($assets as &$asset) {
                 $asset['total_value'] = $this->numberFormat($asset['quantity'] * $asset['last_price']);
                 $asset['asset_price_difference'] = $this->numberFormat(($asset['last_price'] - $asset['average_price']) / $asset['average_price'] * 100);
-                $asset['total_price_difference'] = $this->numberFormat($asset['last_price'] * 100 - $asset['average_price'] * 100);
+                $asset['total_price_difference'] = $this->numberFormat(($asset['last_price'] - $asset['average_price']) * $asset['quantity']);
                 $asset['percentage'] = $this->numberFormat($asset['quantity'] * $asset['last_price'] * 100 / $totalUserAmount);
                 $asset['percentage_goal'] = $this->numberFormat($asset['percentage_goal']);
                 $asset['average_price'] = $this->numberFormat($asset['average_price']);

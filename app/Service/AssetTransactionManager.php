@@ -4,11 +4,12 @@ namespace AdasFinance\Service;
 use AdasFinance\Entity\UserAsset;
 use AdasFinance\Entity\Transaction;
 use AdasFinance\Repository\TransactionRepository;
+use AdasFinance\Repository\UserRepository;
 
 class AssetTransactionManager
 {
-    private const BUY = 'BUY';
-    private const SELL = 'SELL';
+    /** UserRepository */
+    private $userRepository;
 
     /** UserAssetRepository */
     private $userAssetRepository;
@@ -18,6 +19,7 @@ class AssetTransactionManager
 
     public function __construct($userAssetRepository) 
     {
+        $this->userRepository = new UserRepository();
         $this->userAssetRepository = $userAssetRepository;
         $this->transactionRepository = new TransactionRepository();
     }
@@ -49,7 +51,44 @@ class AssetTransactionManager
 
     private function updateUserAssetValues(UserAsset $userAsset, Transaction $transaction): UserAsset
     {
-        // FAZER ----- PAREI AQUI
+        if ($transaction->getTransactionTypeId() == 1) {
+            return $this->buy($userAsset, $transaction);
+        } else {
+            return $this->sell($userAsset, $transaction);
+        }
+    }
+
+    private function buy(UserAsset $userAsset, Transaction $transaction): UserAsset
+    {
+        $userAssetQuantity = $userAsset->getQuantity();
+        $transactionQuantity = $transaction->getQuantity();
+        $totalQuantity = $userAssetQuantity + $transactionQuantity;
+
+        $userAssetAveragePrice = $userAsset->getAveragePrice();
+        $transactionAveragePrice = $transaction->getPrice();
+
+        $newAveragePrice = (($userAssetQuantity * $userAssetAveragePrice) + ($transactionQuantity * $transactionAveragePrice)) / $totalQuantity;
+
+        $userAsset->setQuantity($totalQuantity);
+        $userAsset->setAveragePrice($newAveragePrice);
+
         return $userAsset;
     }
+
+    private function sell(UserAsset $userAsset, Transaction $transaction): UserAsset
+    {
+        $totalQuantity = $userAsset->getQuantity() - $transaction->getQuantity();
+        $userAsset->setQuantity($totalQuantity);
+        
+        $user = $this->userRepository->getById($userAsset->getUserId());
+        $totalBalance = $user->getTotalBalance();
+        $newTotalBalance = $totalBalance + ($transaction->getPrice() - $userAsset->getAveragePrice()) * $transaction->getQuantity();
+        $user->setTotalBalance($newTotalBalance);
+
+        $this->userRepository->update($user);
+        $_SESSION['user'] = $user;
+        
+        return $userAsset;
+    }
+    
 }

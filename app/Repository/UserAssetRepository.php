@@ -126,11 +126,27 @@ class UserAssetRepository implements RepositoryInterface
         $query = "SELECT * FROM UserAsset WHERE id = :lastInsertId";
         $result = $this->query($query, [':lastInsertId' => $lastInsertId]);
     
-        if (!empty($result['data'])) {
-            return self::castToObject($result['data'][0]);
-        }
-    
-        return null;
+        return self::castToObject($result['data'][0], 'UserAsset');
+
+    }
+
+    public function update(UserAsset $userAsset)
+    {
+        $sql = "UPDATE
+        UserAsset
+        SET
+            average_price = :average_price,
+            quantity = :quantity
+        WHERE
+            id = :id";
+        
+        $params = [
+            ':id' => $userAsset->getUserAssetId(),
+            ':average_price' => $userAsset->getAveragePrice(),
+            ':quantity' => $userAsset->getQuantity(),
+        ];
+
+        return $this->query($sql, $params);
     }
 
     public function delete($id)
@@ -164,6 +180,7 @@ class UserAssetRepository implements RepositoryInterface
 
         $result = $this->query($sql, $params);
 
-        return self::castToObject($result['data'][0]);
+        return self::castToObject($result['data'][0], 'UserAsset');
     }
+
 }
