@@ -23,6 +23,7 @@ class UserAssetRepository implements RepositoryInterface
         ];
 
         $result = $this->query($sql, $params);
+        
         return UserAsset::createFromParams($result['data']);
     }
 

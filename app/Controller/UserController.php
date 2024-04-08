@@ -2,15 +2,21 @@
 namespace AdasFinance\Controller;
 
 use AdasFinance\Entity\User;
+use AdasFinance\Repository\AssetRepository;
 use AdasFinance\Repository\UserRepository;
+use AdasFinance\AlphaVantage\AlphaVantageApiService;
 
 class UserController
 {
+    /** AssetRepository */
+    private $assetRepository;
+
     /** UserRepository */
     private $userRepository;
     
     public function __construct() 
     {
+        $this->assetRepository = new AssetRepository();
         $this->userRepository = new UserRepository();
     }
 
@@ -58,6 +64,18 @@ class UserController
         header('Location: login');
     }
 
+    public function synchronizeUserAssetsAction($parameters)
+    {
+        $assets = $this->userRepository->getAllUserAssetSymbols($parameters->userId);
+        
+        foreach($assets as $asset) {
+            $asset->setLastPrice(AlphaVantageApiService::getLastPriceBySymbol($asset->getSymbol()));
+            $this->assetRepository->update($asset);
+        }
+
+        return json_encode(['success' => true, 'message' => 'Ativos sincronizados com sucesso']);
+    }
+
     private function validateNoFieldsMissing($parameters)
     {
         foreach ($parameters as $key => $value) {
@@ -85,5 +103,6 @@ class UserController
 
         return $user;
     }
+
 }
 ?>

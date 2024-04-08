@@ -63,6 +63,33 @@ class UserRepository implements RepositoryInterface
 
         return $this->query($sql, $params);
     }
+
+    public function getAllUserAssetSymbols($userId)
+    {
+        $sql = "SELECT
+            a.* 
+        FROM
+            User u
+        JOIN UserAsset ua
+        ON u.id = ua.user_id 
+        JOIN Asset a 
+        ON ua.asset_id = a.id
+        WHERE u.id = :userId"; 
+
+        $params = [
+            ':userId' => $userId
+        ];
+
+        $result = $this->query($sql, $params);
+        
+        $assets = [];
+        foreach ($result['data'] as $asset) {
+            $assets[] = self::castToObject($asset, 'Asset');
+        }    
+
+        return $assets;
+    }
+    
 }
 
 ?>

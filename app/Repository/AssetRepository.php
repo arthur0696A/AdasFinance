@@ -1,6 +1,7 @@
 <?php
 namespace AdasFinance\Repository;
 
+use AdasFinance\Entity\Asset;
 use AdasFinance\Trait\RepositoryTrait;
 
 class AssetRepository implements RepositoryInterface
@@ -28,5 +29,22 @@ class AssetRepository implements RepositoryInterface
         ];
 
         return $this->query($sql, $params);
+    }
+
+    public function update(Asset $asset)
+    {
+        $sql = "UPDATE
+        Asset
+        SET
+            last_price = :last_price
+        WHERE
+            id = :id";
+        
+        $params = [
+            ':id' => $asset->getId(),
+            ':last_price' => $asset->getLastPrice(),
+        ];
+
+        $this->query($sql, $params);
     }
 }

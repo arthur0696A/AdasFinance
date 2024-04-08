@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     formatTable();
     calculateObjectivePercentageDifference();
     addEventListeners();
+    addMessages();
 });
 
 function formatTable() {
@@ -216,16 +217,7 @@ async function addEventListeners() {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     const userAssetId = button.getAttribute('data-user-asset-id');
-                    try {
-                        await deleteUserAsset(userAssetId);
-                        location.reload(true);
-                    } catch (error) {
-                        Swal.fire({
-                            title: "Erro!",
-                            text: "Um erro aconteceu ao tentar deletar este ativo.",
-                            icon: "error"
-                        });
-                    }
+                    deleteUserAsset(userAssetId);
                 }
             });
 
@@ -253,6 +245,57 @@ async function addEventListeners() {
             // transactionAssetDate.dispatchEvent(inputEvent);
         });
     });
+
+    const expandButtons = document.querySelectorAll('.expand-button');
+    expandButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            let userAssetId = button.getAttribute('data-user-asset-id');
+
+            if (button.classList.contains("expanded")) {
+                document.getElementById(`asset-transaction-history-${userAssetId}`).style.visibility = 'collapse';
+                button.classList.remove("fa-chevron-up");
+                button.classList.add("fa-chevron-down");
+                button.classList.remove("expanded");
+                return;
+            }
+
+            document.getElementById(`asset-transaction-history-${userAssetId}`).style.visibility = 'visible';
+            button.classList.remove("fa-chevron-down");
+            button.classList.add("fa-chevron-up");
+            button.classList.add("expanded");
+            
+        });
+    });
+
+    const synchronizeButton = document.getElementById('synchronize');
+    synchronizeButton.addEventListener('click', () => {
+        let userId = synchronizeButton.getAttribute('data-user-id');
+        synchronizeUserAssets(userId);
+    });
+}
+
+function addMessages() {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const deleteSuccess = urlParams.get('deleteSuccess');
+    if (deleteSuccess === 'true') {
+        Swal.fire({
+            icon: 'success',
+            title: 'Sucesso!',
+            text: 'Ativo deletado com sucesso',
+            timer: 2000
+        });
+    }
+
+    const syncSuccess = urlParams.get('syncSuccess');
+    if (syncSuccess === 'true') {
+        Swal.fire({
+            icon: 'success',
+            title: 'Sucesso!',
+            text: 'Ativos sincronizados com sucesso',
+            timer: 2000
+        });
+    }
 }
 
 async function searchBySymbol(symbol) {
@@ -318,7 +361,42 @@ async function deleteUserAsset(userAssetId) {
         }),
     }
 
-    return fetch('http://localhost:8000/user_asset_delete', options);
+    try {
+        const response = await fetch('http://localhost:8000/user_asset_delete', options);
+        if (response.ok) {
+            window.location.href = 'http://localhost:8000/home?deleteSuccess=true';
+        } else {
+            console.error('Ativo deletado com sucesso:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Falha ao deletar ativo:', error);
+    }
+}
+
+async function synchronizeUserAssets(userId) {
+
+    showProcessingModal();
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            userId: userId
+        }),
+    }
+
+    try {
+        const response = await fetch('http://localhost:8000/synchronize_user_assets', options);
+        if (response.ok) {
+            closeProcessingModal();
+            window.location.href = 'http://localhost:8000/home?syncSuccess=true';
+        } else {
+            console.error('Falha ao sincronizar:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Falha ao sincronizar:', error);
+    }
 }
 
 function incrementValue(incrementBy) {
@@ -362,6 +440,14 @@ function showAlertContainer() {
 
 function closeAlertContainer() {
     document.querySelector('.alert-container').style.display = 'none';
+}
+
+function showProcessingModal() {
+    document.getElementById('processing-modal').style.display = 'block';
+}
+
+function closeProcessingModal() {
+    document.getElementById('processing-modal').style.display = 'none';
 }
 
 const numberMask = (input) => {

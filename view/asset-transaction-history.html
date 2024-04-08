@@ -1,0 +1,27 @@
+<tr class="asset-transaction-history" id='asset-transaction-history-<?php echo $userAsset["id"]; ?>' style='visibility:collapse'>
+  <td colspan="5"></td>
+  <td colspan="5">
+      <div class="accordion-transaction">
+        <table class="transaction-table" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>Tipo de Transação</th>
+                    <th>Data da Transação</th>
+                    <th>Preço</th>
+                    <th>Quantidade</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($transactions as $transaction): ?>
+                    <tr>
+                        <td><?php echo $transaction->getTransactionTypeName(); ?></td>
+                        <td><?php echo $transaction->getTransactionDate(); ?></td>
+                        <td>R$ <?php echo $transaction->getFormattedPrice(); ?></td>
+                        <td><?php echo $transaction->getQuantity(); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+      </div>
+  </td>
+</tr>
