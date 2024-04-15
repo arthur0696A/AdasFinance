@@ -171,3 +171,27 @@ body {
     max-width: 550px; 
     text-align: center;
 }
+
+#acoes.active {
+    background-color: #df8e7c;
+    color: #721c24;
+}
+
+#fiis.active {
+    background-color: #85c4d1;
+    color: #184576;
+}
+
+#cripto.active {
+    background-color: #c2a8e4;
+    color: #56219b;
+}
+
+#asset-filter {
+    width: 90%;
+    margin: 0 auto;
+}
+
+#asset-filter .nav-link {
+    font-size: 1.1em;
+}

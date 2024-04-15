@@ -272,6 +272,28 @@ async function addEventListeners() {
         let userId = synchronizeButton.getAttribute('data-user-id');
         synchronizeUserAssets(userId);
     });
+
+    const navItems = document.querySelectorAll(".nav-link");
+    navItems.forEach(button => {
+        const groupId = button.getAttribute("data-group-id");
+        let totalGroupValue = document.getElementById(`group-${groupId}-total`).value;
+
+        if (!totalGroupValue) {
+            totalGroupValue = 0;
+        }
+
+        button.innerHTML += "<br><div class='mt-2'>" + totalGroupValue + "</div>";
+
+        button.addEventListener("click", () => {
+            const rows = document.querySelectorAll(`.group-${groupId}`);
+            button.classList.toggle("active");
+            const isActive = button.classList.contains("active");
+
+            rows.forEach(row => {
+                row.style.display = isActive ? "" : "none";
+            });
+        });
+    });
 }
 
 function addMessages() {
@@ -421,9 +443,13 @@ function convertToFloat(value) {
     value = value.trim();
     value = value.replace('%', '');
     value = value.replace('R$', '');
-    value = value.replace(",", ".");
+    if (value.includes(',') && value.includes('.')) {
+        value = value.replace(',', '');
+    } else if (value.includes(',')) {
+        value = value.replace(',', '.');
+    }
 
-    return value;
+    return parseFloat(value);
 }
 
 function showSuccessContainer() {

@@ -9,17 +9,20 @@ class Asset {
     private $symbol;
     private $name;
     private $lastPrice;
+    private $groupType;
 
     public function __construct(
         ?int $id = null,
         ?string $symbol = null,
         ?string $name = null,
-        ?float $lastPrice = null
+        ?float $lastPrice = null,
+        ?int $groupType = null
     ) {
         $this->id = $id;
         $this->symbol = $symbol;
         $this->name = $name;
         $this->lastPrice = $lastPrice;
+        $this->groupType = $groupType;
     }
 
     public static function createFromParams(stdClass $params): self 
@@ -28,7 +31,8 @@ class Asset {
             self::convertToType($params->id, 'int'),
             self::convertToType($params->symbol, 'string'),
             self::convertToType($params->name, 'string'),
-            self::convertToType($params->lastPrice, 'double')
+            self::convertToType($params->lastPrice, 'double'),
+            self::convertToType($params->groupType, 'int')
         );
     }
 
@@ -117,6 +121,26 @@ class Asset {
     public function setLastPrice($lastPrice)
     {
         $this->lastPrice = $lastPrice;
+
+        return $this;
+    }
+
+      /**
+     * Get the value of groupType
+     */ 
+    public function getGroupType()
+    {
+        return $this->groupType;
+    }
+
+    /**
+     * Set the value of groupType
+     *
+     * @return  self
+     */ 
+    public function setGroupType($groupType)
+    {
+        $this->groupType = $groupType;
 
         return $this;
     }

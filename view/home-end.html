@@ -7,6 +7,11 @@
     </td>    
 <?php endif; ?>
 </table>
+<div>
+    <input id="group-1-total" type="hidden" value="<?php echo isset($groupTotal[1]) ? $groupTotal[1] : '0'; ?> %">
+    <input id="group-2-total" type="hidden" value="<?php echo isset($groupTotal[2]) ? $groupTotal[2] : '0'; ?> %">
+    <input id="group-3-total" type="hidden" value="<?php echo isset($groupTotal[3]) ? $groupTotal[3] : '0'; ?> %">    
+</div>
 <div class="message-container success-container">
     <i class="fa-solid fa-circle-check"></i>
     <span>Objetivo salvo com sucesso.<span>
