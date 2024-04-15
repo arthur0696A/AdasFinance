@@ -23,6 +23,7 @@ class UserAssetRepository implements RepositoryInterface
         ];
 
         $result = $this->query($sql, $params);
+        
         return UserAsset::createFromParams($result['data']);
     }
 
@@ -37,7 +38,8 @@ class UserAssetRepository implements RepositoryInterface
             ua.quantity,
             a.symbol,
             a.name,
-            FORMAT(a.last_price, 2) AS last_price
+            FORMAT(a.last_price, 2) AS last_price,
+            a.group_type
         FROM
             UserAsset ua
         JOIN Asset a on

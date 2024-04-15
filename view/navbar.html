@@ -3,16 +3,28 @@
 ?>
 <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
     <div class="container-fluid" style="margin: 0 2em 0 2em;">
-        <div class="col-md-4 d-flex">
+        <div class="col-md-2 d-flex">
             <a class="navbar-brand" href="home">
                 <img src="/assets/images/logo.png" style="width: 7em; height:3em;">
             </a>
         </div>
         <div class="col-md-2 d-flex justify-content-center">
             <button type="button" class="btn btn-primary" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#includeAsset">
-                <i class="fa-solid fa-plus"></i>
+                <i class="fa-solid fa-plus me-1"></i>
                 Incluir Ativo
             </button>
+        </div>
+        <div class="col-md-2 d-flex justify-content-center">
+            <button id="synchronize" type="button" class="btn btn-primary" data-user-id="<?php echo($_SESSION['user']->getId()) ?>">
+                <i class="fa-solid fa-refresh me-1"></i>
+                Sincronizar
+            </button>
+        </div>
+        <div class="col-md-2 d-flex justify-content-center">
+            <div class="d-flex flex-column align-items-center">
+                <div><strong>Total Aplicado</strong></div>
+                <div><strong>R$ <?php echo number_format($totalUserAmount, 2, ',', '.') ?></strong></div>
+            </div>
         </div>
         <div class="col-md-2 d-flex justify-content-center">
             <div class="d-flex flex-column align-items-center">
@@ -20,7 +32,7 @@
                 <div><strong>R$ <?php echo number_format($_SESSION['user']->getTotalBalance(), 2, ',', '.') ?></strong></div>
             </div>
         </div>
-        <div class="col-md-4 d-flex justify-content-end">
+        <div class="col-md-2 d-flex justify-content-end">
             <div class="dropdown">
                 <a
                     data-mdb-dropdown-init

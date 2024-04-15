@@ -62,6 +62,7 @@ class Router
                 '/user_asset_goal_percentage' => fn () => self::load('UserAssetController', 'userAssetGoalPercentage'),
                 '/user_asset_save' => fn () => self::load('UserAssetController', 'userAssetSave'),
                 '/register_transaction' => fn () => self::load('UserAssetController', 'registerTransaction'),
+                '/synchronize_user_assets' => fn () => self::load('UserController', 'synchronizeUserAssets'),
             ],
 
             'put' => [

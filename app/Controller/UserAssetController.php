@@ -14,40 +14,63 @@ class UserAssetController
     /** UserAssetRepository */
     private $userAssetRepository;
 
+    /** TransactionRepository */
+    private $transactionRepository;
+
     /** AssetTransactionManager */
     private $assetTransactionManager;
     
     public function __construct() 
     {
         $this->userAssetRepository = new UserAssetRepository();
+        $this->transactionRepository = new TransactionRepository();
         $this->assetTransactionManager = new AssetTransactionManager($this->userAssetRepository);
     }
 
     public function homeAction()
     {
-        include '../view/home.html';
         try {
             $userId = $_SESSION['user']->getId();
-            $assets = $this->userAssetRepository->getAssetsByUserId($userId);
-            $assets = $this->handleResult($assets);
+            $userAssets = $this->userAssetRepository->getAssetsByUserId($userId);
+            $userAssets = $this->handleResult($userAssets);
     
-            if (empty($assets)) {
+            if (empty($userAssets)) {
                 throw new Exception("User does not have any registered assets");
             }
     
             $totalUserAmount = $this->userAssetRepository->getTotalAmountByUserId($userId);
             $totalUserAmount = $this->handleResult($totalUserAmount)[0]['total_amount'];
-    
-            foreach ($assets as &$asset) {
-                $asset['total_value'] = $this->numberFormat($asset['quantity'] * $asset['last_price']);
-                $asset['asset_price_difference'] = $this->numberFormat(($asset['last_price'] - $asset['average_price']) / $asset['average_price'] * 100);
-                $asset['total_price_difference'] = $this->numberFormat(($asset['last_price'] - $asset['average_price']) * $asset['quantity']);
-                $asset['percentage'] = $this->numberFormat($asset['quantity'] * $asset['last_price'] * 100 / $totalUserAmount);
-                $asset['percentage_goal'] = $this->numberFormat($asset['percentage_goal']);
-                $asset['average_price'] = $this->numberFormat($asset['average_price']);
-                $asset['last_price'] = $this->numberFormat($asset['last_price']);
+            $groupTotal = [];
+
+            include '../view/home.html';
+
+            foreach ($userAssets as &$userAsset) {
+                $transactions = $this->transactionRepository->getAllTransactionsByUserAssetId($userAsset['user_id'], $userAsset['asset_id']);
+
+                $lastPrice = str_replace(",", "", $userAsset['last_price']);
+                $averagePrice = str_replace(",", "", $userAsset['average_price']);
+
+                $userAsset['total_value'] = $this->numberFormat($userAsset['quantity'] * $lastPrice);
+                $userAsset['asset_price_difference'] = $this->numberFormat(($lastPrice - $averagePrice) / $averagePrice * 100);
+                $userAsset['total_price_difference'] = $this->numberFormat(($lastPrice - $averagePrice) * $userAsset['quantity']);
+                $userAsset['percentage'] = $this->numberFormat($userAsset['quantity'] * $lastPrice * 100 / $totalUserAmount);
+                $userAsset['percentage_goal'] = $this->numberFormat($userAsset['percentage_goal']);
+                $userAsset['average_price'] = $this->numberFormat($averagePrice);
+                $userAsset['last_price'] = $this->numberFormat($lastPrice);
+                
+                if (!isset($groupTotal[$userAsset['group_type']])) {
+                    $groupTotal[$userAsset['group_type']] = 0;
+                }
+                
+                $groupTotal[$userAsset['group_type']] += $userAsset['quantity'] * $lastPrice * 100 / $totalUserAmount;
+
                 include '../view/asset.html';
             }
+
+            foreach ($groupTotal as &$total) {
+                $total = $this->numberFormat($total);
+            }
+
         } catch(Exception $exception) {
             
         }

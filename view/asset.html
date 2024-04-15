@@ -1,88 +1,89 @@
 <?php
     include 'transaction.html';      
 ?>
-<tr>
+<tr class="group-<?php echo $userAsset['group_type']; ?>" data-group-id="<?php echo $userAsset['group_type']; ?>">
     <td>
         <div class="d-flex align-items-center">
-            <div >
-                <i class="fa-solid fa-chevron-down"></i>
+            <div class="expand-button">
+                <i data-user-asset-id='<?php echo $userAsset["id"]; ?>' class="fa-solid fa-chevron-down expand-button" style="cursor: pointer;"></i>
             </div>
             <div class="ms-3">
-                <input type="hidden" id="asset-id-<?php echo $asset['id']; ?>" value="<?php echo $asset['asset_id']; ?>"/>
-                <p id="symbol-<?php echo $asset['id']; ?>" class="fw-bold mb-1"><?php echo $asset["symbol"]; ?></p>
-                <p id="name-<?php echo $asset['id']; ?>" class="text-muted mb-0"><?php echo $asset["name"]; ?></p>
+                <input type="hidden" id="asset-id-<?php echo $userAsset['id']; ?>" value="<?php echo $userAsset['asset_id']; ?>"/>
+                <p id="symbol-<?php echo $userAsset['id']; ?>" class="fw-bold mb-1"><?php echo $userAsset["symbol"]; ?></p>
+                <p id="name-<?php echo $userAsset['id']; ?>" class="text-muted mb-0"><?php echo $userAsset["name"]; ?></p>
             </div>
         </div>
     </td>
     <td>
-        <?php echo $asset["quantity"]; ?>
+        <?php echo $userAsset["quantity"]; ?>
     </td>
     <td>
-        R$ <?php echo $asset["average_price"]; ?>
+        R$ <?php echo $userAsset["average_price"]; ?>
     </td>
     <td>
         <div class="primary-value">
-            <span id="last-price-<?php echo $asset["id"]; ?>">
-                R$ <?php echo $asset["last_price"]; ?>
+            <span id="last-price-<?php echo $userAsset["id"]; ?>">
+                R$ <?php echo $userAsset["last_price"]; ?>
             </span>
         </div>
         <div class="second-value">
             <span>
                 <i class="fas me-1"></i>
-                <span class="difference"><?php echo $asset["asset_price_difference"]; ?>%</span>
+                <span class="difference"><?php echo $userAsset["asset_price_difference"]; ?>%</span>
             </span>
         </div>
     </td>
     <td>
         <div class="primary-value">
             <span>
-                R$ <?php echo $asset["total_value"]; ?>
+                R$ <?php echo $userAsset["total_value"]; ?>
             </span>
         </div>
         <div class="second-value">
             <span>
                 <i class="fas me-1"></i>
-                <span class="difference">R$ <?php echo $asset["total_price_difference"]; ?></span>
+                <span class="difference">R$ <?php echo $userAsset["total_price_difference"]; ?></span>
             </span>
         </div>
     </td>
     <td class="table-divider"></td>
     <td>
         <div class="primary-value">
-            <span data-user-asset-id='<?php echo $asset["id"]; ?>'>
-                <?php echo $asset["percentage"]; ?>%
+            <span data-user-asset-id='<?php echo $userAsset["id"]; ?>'>
+                <?php echo $userAsset["percentage"]; ?>%
             </span>
         </div>
         <div class="second-value">
             <span>
                 <i class="fas me-1"></i>
-                <span class="difference" data-user-asset-id='<?php echo $asset["id"]; ?>'></span>
+                <span class="difference" data-user-asset-id='<?php echo $userAsset["id"]; ?>'></span>
             </span>
         </div>
     </td>
     <td>
         <div class="input-container">
-            <input class="objective-percentage double-mask" data-user-asset-id='<?php echo $asset["id"]; ?>' type="text" id="objective-percentage" value='<?php echo $asset["percentage_goal"]; ?>'>
+            <input class="objective-percentage double-mask" data-user-asset-id='<?php echo $userAsset["id"]; ?>' type="text" id="objective-percentage" value='<?php echo $userAsset["percentage_goal"]; ?>'>
             <span class="spinner">
                 <i class="fa-solid fa-rotate-right fa-spin"></i>
             </span>
         </div>
     </td>
     <td>
-        <span class="badge rounded-pill d-inline" data-user-asset-id='<?php echo $asset["id"]; ?>' style="font-size: 1em;"></span>
+        <span class="badge rounded-pill d-inline" data-user-asset-id='<?php echo $userAsset["id"]; ?>' style="font-size: 1em;"></span>
     </td>
     <td class="ms-auto">
         <div class="icon-container">
             <div>
-                <a class="new-transaction" data-user-asset-id='<?php echo $asset["id"]; ?>' data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#transaction" data-mdb-tooltip-init title="Adicionar Transação" role="button">
+                <a class="new-transaction" data-user-asset-id='<?php echo $userAsset["id"]; ?>' data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#transaction" data-mdb-tooltip-init title="Adicionar Transação" role="button">
                     <i class="fas fa-money-bill-transfer" style="color: #1b7e32;"></i>
                 </a>
             </div>
             <div>
-                <a class="remove-asset" data-user-asset-id='<?php echo $asset["id"]; ?>' data-mdb-tooltip-init title="Excluir Ativo" role="button">
+                <a class="remove-asset" data-user-asset-id='<?php echo $userAsset["id"]; ?>' data-mdb-tooltip-init title="Excluir Ativo" role="button">
                     <i class="fas fa-square-xmark" style="color: #b63e48;"></i>
                 </a>
             </div>
         </div>
     </td>
 </tr>
+<?php include 'asset-transaction-history.html'; ?>

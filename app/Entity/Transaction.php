@@ -12,6 +12,9 @@ class Transaction {
     private float $price;
     private int $quantity;
 
+    private const BUY = "COMPRA";
+    private const SELL = "VENDA";
+
     public function __construct(
         int $userId,
         int $assetId,
@@ -119,6 +122,11 @@ class Transaction {
         return $this->price;
     }
 
+    public function getFormattedPrice(): ?string
+    {
+        return number_format($this->price, 2, ',', '.');
+    }
+
     public function setPrice(float $price): self 
     {
         if ($price < 0) {
@@ -142,6 +150,11 @@ class Transaction {
 
         $this->quantity = $quantity;
         return $this;
+    }
+
+    public function getTransactionTypeName(): ?string
+    {
+        return $this->transactionTypeId == 1? self::BUY : self::SELL;
     }
 }
 

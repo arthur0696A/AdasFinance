@@ -1,7 +1,17 @@
 <?php
     include 'navbar.html';      
 ?>
-<div class="container mt-5">
+<div id="processing-modal" class="modal processing-modal">
+  <div class="modal-content">
+      <i class="fas fa-sync fa-spin fa-3x"></i>
+      <br>
+      <p>Sincronizando...</p>
+  </div>
+</div>
+<?php
+    include 'asset-filter.html';      
+?>
+<div class="container mt-2">
     <table class="table align-middle mb-0 bg-white">
         <thead class="bg-light">
           <tr>

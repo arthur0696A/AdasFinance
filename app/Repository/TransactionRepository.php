@@ -41,4 +41,25 @@ class TransactionRepository implements RepositoryInterface
         return $this->query($sql, $params);
     }
 
+    public function getAllTransactionsByUserAssetId($userId, $assetId)
+    {
+        $sql = "SELECT * 
+        FROM Transaction 
+        WHERE user_id = :userId 
+        AND asset_id = :assetId";
+        
+        $params = [
+            ':userId' => $userId,
+            ':assetId' => $assetId
+        ];
+
+        $result = $this->query($sql, $params);
+        $transactions = [];
+
+        foreach($result['data'] as $transaction) {
+            $transactions[] = self::castToObject($transaction, 'Transaction');
+        }
+        
+        return $transactions;
+    }
 }

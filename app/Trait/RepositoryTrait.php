@@ -3,6 +3,8 @@ namespace AdasFinance\Trait;
 
 use AdasFinance\Service\CamelCaseConverter;
 use AdasFinance\Service\ConnectionCreator;
+use AdasFinance\Entity\Asset;
+use AdasFinance\Entity\Transaction;
 use AdasFinance\Entity\User;
 use AdasFinance\Entity\UserAsset;
 use PDO;
@@ -43,11 +45,17 @@ trait RepositoryTrait {
         $formattedObject = CamelCaseConverter::convertToCamelCase($object);
 
         switch($class) {
+            case 'Asset':
+                return Asset::createFromParams($formattedObject);
+                break;
             case 'UserAsset':
                 return UserAsset::createFromParams($formattedObject);
                 break;
             case 'User':
                 return User::createFromParams($formattedObject);
+                break;
+            case 'Transaction':
+                return Transaction::createFromParams($formattedObject);
                 break;
         }
     }
