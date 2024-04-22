@@ -4,10 +4,13 @@
 <tr class="group-<?php echo $userAsset['group_type']; ?>" data-group-id="<?php echo $userAsset['group_type']; ?>">
     <td>
         <div class="d-flex align-items-center">
-            <div class="expand-button">
+            <div class="expand-button col-2">
                 <i data-user-asset-id='<?php echo $userAsset["id"]; ?>' class="fa-solid fa-chevron-down expand-button" style="cursor: pointer;"></i>
             </div>
-            <div class="ms-3">
+            <div class="ms-2 col-2">
+                <i class="fa-solid fa-xl asset-icon"></i>
+            </div>
+            <div class="ms-3 col-8 text-start">
                 <input type="hidden" id="asset-id-<?php echo $userAsset['id']; ?>" value="<?php echo $userAsset['asset_id']; ?>"/>
                 <p id="symbol-<?php echo $userAsset['id']; ?>" class="fw-bold mb-1"><?php echo $userAsset["symbol"]; ?></p>
                 <p id="name-<?php echo $userAsset['id']; ?>" class="text-muted mb-0"><?php echo $userAsset["name"]; ?></p>

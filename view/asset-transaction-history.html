@@ -1,5 +1,8 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <tr class="asset-transaction-history group-<?php echo $userAsset['group_type']; ?>" id='asset-transaction-history-<?php echo $userAsset["id"]; ?>' style='visibility:collapse'>
-  <td colspan="5"></td>
+  <td colspan="5">
+    <canvas id="myChart" ></canvas>
+  </td>
   <td colspan="5">
       <div class="accordion-transaction">
         <table class="transaction-table" style="width: 100%;">
@@ -14,7 +17,9 @@
             <tbody>
                 <?php foreach ($transactions as $transaction): ?>
                     <tr>
-                        <td><?php echo $transaction->getTransactionTypeName(); ?></td>
+                        <td>
+                            <span class="transaction-type"><?php echo $transaction->getTransactionTypeName(); ?><i class="fa-solid ms-1"></i></span>
+                        </td>
                         <td><?php echo $transaction->getTransactionDate(); ?></td>
                         <td>R$ <?php echo $transaction->getFormattedPrice(); ?></td>
                         <td><?php echo $transaction->getQuantity(); ?></td>

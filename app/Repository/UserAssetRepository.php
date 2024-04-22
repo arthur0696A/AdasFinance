@@ -45,7 +45,9 @@ class UserAssetRepository implements RepositoryInterface
         JOIN Asset a on
             ua.asset_id = a.id
         WHERE
-            ua.user_id = :id";
+            ua.user_id = :id
+        ORDER BY
+            a.group_type, a.name";
         
         $params = [
             ':id' => $id

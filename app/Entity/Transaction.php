@@ -10,7 +10,7 @@ class Transaction {
     private int $transactionTypeId;
     private string $transactionDate;
     private float $price;
-    private int $quantity;
+    private float $quantity;
 
     private const BUY = "COMPRA";
     private const SELL = "VENDA";
@@ -21,7 +21,7 @@ class Transaction {
         int $transactionTypeId,
         string $transactionDate,
         float $price,
-        int $quantity,
+        float $quantity,
     ) {
         $this->userId = $userId;
         $this->assetId = $assetId;
@@ -39,7 +39,7 @@ class Transaction {
             self::convertToType($params->transactionTypeId, 'int'),
             self::convertToType($params->transactionDate, 'date'),
             self::convertToType($params->price, 'float'),
-            self::convertToType($params->quantity, 'int'),
+            self::convertToType($params->quantity, 'float'),
         );
     }
 
@@ -137,12 +137,12 @@ class Transaction {
         return $this;
     }
 
-    public function getQuantity(): ?int
+    public function getQuantity(): ?float
     {
         return $this->quantity;
     }
 
-    public function setQuantity(int $quantity): self 
+    public function setQuantity(float $quantity): self 
     {
         if ($quantity < 0) {
             throw new \InvalidArgumentException("Quantity cannot be negative.");

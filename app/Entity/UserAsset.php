@@ -9,14 +9,14 @@ class UserAsset {
     private ?int $userId;
     private ?int $assetId;
     private ?float $averagePrice;
-    private ?int $quantity;
+    private ?float $quantity;
 
     public function __construct(
         ?int $userAssetId = null,
         ?int $userId = null,
         ?int $assetId = null,
         ?float $averagePrice = null,
-        ?int $quantity = null
+        ?float $quantity = null
     ) {
         $this->userAssetId = $userAssetId;
         $this->userId = $userId;
@@ -32,7 +32,7 @@ class UserAsset {
             self::convertToType($params->userId, 'int'),
             self::convertToType($params->assetId, 'int'),
             self::convertToType($params->averagePrice, 'float'),
-            self::convertToType($params->quantity, 'int'),
+            self::convertToType($params->quantity, 'float'),
         );
     }
 
@@ -96,12 +96,12 @@ class UserAsset {
         return $this;
     }
 
-    public function getQuantity(): ?int
+    public function getQuantity(): ?float
     {
         return $this->quantity;
     }
 
-    public function setQuantity(int $quantity): self 
+    public function setQuantity(float $quantity): self 
     {
         if ($quantity < 0) {
             throw new \InvalidArgumentException("Quantity cannot be negative.");
