@@ -2,13 +2,21 @@ document.addEventListener('DOMContentLoaded', function() {
     formatTable();
     calculateObjectivePercentageDifference();
     addEventListeners();
+    createCharts();
     addMessages();
 });
 
 function formatTable() {
-    let cells = document.querySelectorAll('td');
-    cells.forEach(function(cell) {
-        cell.classList.add('text-center');
+    let rows = document.querySelectorAll('tr');
+    rows.forEach(function(row) {
+        if (!row.classList.contains("asset-transaction-history")) {
+            addAssetIcon(row);
+        }
+    });
+    
+    let columns = document.querySelectorAll('td');
+    columns.forEach(function(column) {
+        column.classList.add('text-center');
     });
 
     spans = document.querySelectorAll('.difference');
@@ -26,6 +34,18 @@ function formatTable() {
         } else {
             spanParentNode.classList.add('text-danger');
             icon.classList.add('fa-caret-down'); 
+        }
+    });
+
+    let transactionsType = document.querySelectorAll('.transaction-type');
+    transactionsType.forEach(function(transactionType) {
+        const textContent = transactionType.childNodes[0].nodeValue.trim();
+        if (textContent == "COMPRA") {
+            transactionType.closest('tr').style.color = "green";
+            transactionType.childNodes[1].classList.add("fa-up-long");
+        } else {
+            transactionType.closest('tr').style.color = "red";
+            transactionType.childNodes[1].classList.add("fa-down-long");
         }
     });
 }
@@ -228,7 +248,8 @@ async function addEventListeners() {
     const transactionAssetSymbolElement = document.getElementById('asset-symbol-transaction');
     const transactionAssetNameElement = document.getElementById('asset-name-transaction');
     const transactionAveragePriceElement = document.getElementById('average-price-transaction');
-    const transactionAssetDate = document.getElementById('asset-transaction-date');
+    const transactionAssetDate = document.getElementById('date-transaction');
+    const transactionQuantityElement = document.getElementById('quantity-transaction');
 
     const newTransactionElements = document.querySelectorAll('.new-transaction');
     newTransactionElements.forEach((button) => {
@@ -238,12 +259,31 @@ async function addEventListeners() {
             transactionAssetIdElement.value = document.getElementById(`asset-id-${userAssetId}`).value;
             transactionAssetSymbolElement.value = document.getElementById(`symbol-${userAssetId}`).textContent;
             transactionAssetNameElement.value = document.getElementById(`name-${userAssetId}`).textContent;
+            transactionAveragePriceElement.value = document.getElementById(`last-price-${userAssetId}`).textContent;
 
-            // transactionAssetSymbolElement.dispatchEvent(inputEvent);
-            // transactionAssetNameElement.dispatchEvent(inputEvent);
-            // transactionAveragePriceElement.dispatchEvent(inputEvent);
-            // transactionAssetDate.dispatchEvent(inputEvent);
+            const currentDate = new Date();
+            const year = currentDate.getFullYear();
+            let month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+            let day = currentDate.getDate().toString().padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+            transactionAssetDate.value = formattedDate;
+
+            numberMask(transactionAveragePriceElement);
+            numberMask(transactionQuantityElement);
+
+            transactionAssetSymbolElement.dispatchEvent(inputEvent);
+            transactionAssetSymbolElement.dispatchEvent(inputEvent);
+            transactionAssetNameElement.dispatchEvent(inputEvent);
+            transactionAveragePriceElement.dispatchEvent(inputEvent);
+            transactionAssetDate.dispatchEvent(inputEvent);
+            transactionQuantityElement.dispatchEvent(inputEvent);
         });
+    });
+
+    const registerTransactionForm = document.getElementById('register-transaction');
+    registerTransactionForm.addEventListener('submit', () => {
+        removeNumberMask(transactionAveragePriceElement);
+        removeNumberMask(transactionQuantityElement);
     });
 
     const expandButtons = document.querySelectorAll('.expand-button');
@@ -282,7 +322,7 @@ async function addEventListeners() {
             totalGroupValue = 0;
         }
 
-        button.innerHTML += "<br><div class='mt-2'>" + totalGroupValue + "</div>";
+        button.innerHTML += totalGroupValue;
 
         button.addEventListener("click", () => {
             const rows = document.querySelectorAll(`.group-${groupId}`);
@@ -294,6 +334,29 @@ async function addEventListeners() {
             });
         });
     });
+}
+
+function addAssetIcon(userAsset) {
+    
+    const groupId = userAsset.getAttribute("data-group-id");
+    const assetIcon = userAsset.querySelector('.asset-icon');
+
+    switch (groupId) {
+        case '1':
+            assetIcon.classList.add("fa-circle-dollar-to-slot");
+            assetIcon.style.color = "indianred";
+            break;
+        case '2':
+            assetIcon.classList.add("fa-house-chimney");
+            assetIcon.style.color = "indigo";
+            break;
+        case '3':
+            assetIcon.classList.remove("fa-solid");
+            assetIcon.classList.add("fa-brands");
+            assetIcon.classList.add("fa-btc");
+            assetIcon.style.color = "darkgreen";
+            break;
+    }
 }
 
 function addMessages() {
@@ -423,7 +486,7 @@ async function synchronizeUserAssets(userId) {
 
 function incrementValue(incrementBy) {
     const inputElement = document.getElementById('quantity');
-    let currentValue = parseInt(inputElement.value);
+    let currentValue = parseFloat(inputElement.value);
     let newValue = currentValue + incrementBy;
     inputElement.value = newValue;
 }
@@ -485,13 +548,15 @@ const numberMask = (input) => {
 
     switch (inputId) {
     case 'average-price':
-        doubleMask(input);
+    case 'average-price-transaction':
+        doublePriceMask(input);
         break;
     case 'objective-percentage':
         objectivePercentageMask(input);
         break;
     case 'quantity':
-        intMask(input);
+    case 'quantity-transaction':
+        doubleMask(input);
         break;
     }
 }
@@ -508,7 +573,7 @@ const objectivePercentageMask = (input) => {
     input.value = result;
 }
 
-const doubleMask = (input) => {
+const doublePriceMask = (input) => {
     let value = input.value.replace(/\D/g, '');
     value = parseFloat(value) / 100;
 
@@ -521,35 +586,48 @@ const doubleMask = (input) => {
     input.value = formattedValue;
 }
 
+const doubleMask = (input) => {
+    let value = input.value.replace(/[^\d,]/g, '');
+    value = value.replace(/^0+(?=\d)/, '');
+    value = value.replace(/(\,\d*?)\,/, '$1');
+    input.value = value;
+}
+
 const intMask = (input) => {
     let value = input.value.replace('.', '').replace(',', '').replace(/\D/g, '');
     input.value = value;
 }
 
 const doubleMaskValue = (value) => {
-    value = value.replace(/\D/g, '');
-    value = parseFloat(value) / 100;
+    value = value.replace(/[^\d.]/g, '');
 
-    const formattedValue = value.toLocaleString('pt-BR', {
+    if (value.indexOf('.') === -1) {
+        value += '.00';
+    } else if (value.split('.')[1].length === 1) {
+        value += '0';
+    }
+
+    value = parseFloat(value).toLocaleString('pt-BR', {
         style: 'currency',
         currency: 'BRL',
         minimumFractionDigits: 2,
     });
 
-    return formattedValue;
+    return value;
 }
 
 const removeNumberMask = (input) => {
     const inputId = input.id;
-
+console.log(inputId);
     switch (inputId) {
         case 'last-price':
         case 'average-price':
+        case 'quantity':
+        case 'average-price-transaction':
+        case 'quantity-transaction':
             return removeDoubleMask(input);
         case 'objective-percentage':
             return removeObjectivePercentageMask(input);
-        case 'quantity':
-            return removeIntMask(input);
         default:
             return input.value;
     }
@@ -563,11 +641,41 @@ const removeObjectivePercentageMask = (input) => {
 }
 
 const removeDoubleMask = (input) => {
-    let numericValue = input.value.replace(/[^\d.]/g, '');
-    input.value = parseFloat(numericValue) / 100;
+    let numericValue = input.value;
+    numericValue = numericValue.replace(/[^\d.,]/g, '');
+
+    if (numericValue.includes('.')) {
+        numericValue = numericValue.replace('.', '');
+    }
+
+    numericValue = numericValue.replace(',', '.');
+    
+    input.value = numericValue;
 }
 
 const removeIntMask = (input) => {
     let numericValue = input.value.replace(/[^\d]/g, '');
     input.value = parseInt(numericValue, 10);
+}
+
+function createCharts() {
+    const ctx = document.getElementById('myChart');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+          datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
 }

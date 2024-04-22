@@ -9,26 +9,28 @@
             </a>
         </div>
         <div class="col-md-2 d-flex justify-content-center">
-            <button type="button" class="btn btn-primary" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#includeAsset">
+            <button type="button" class="btn btn-primary" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#includeAsset" style="height: 6vh;">
                 <i class="fa-solid fa-plus me-1"></i>
                 Incluir Ativo
             </button>
         </div>
         <div class="col-md-2 d-flex justify-content-center">
-            <button id="synchronize" type="button" class="btn btn-primary" data-user-id="<?php echo($_SESSION['user']->getId()) ?>">
+            <button id="synchronize" type="button" class="btn btn-primary" data-user-id="<?php echo($_SESSION['user']->getId()) ?>" style="height: 6vh;">
                 <i class="fa-solid fa-refresh me-1"></i>
                 Sincronizar
             </button>
         </div>
-        <div class="col-md-2 d-flex justify-content-center">
+        <div class="col-md-2 d-flex justify-content-center align-items-center">
+            <i class="fa-solid fa-sack-dollar fa-2xl me-2"></i>
             <div class="d-flex flex-column align-items-center">
-                <div><strong>Total Aplicado</strong></div>
+                <div><strong>TOTAL APLICADO</strong></div>
                 <div><strong>R$ <?php echo number_format($totalUserAmount, 2, ',', '.') ?></strong></div>
             </div>
         </div>
-        <div class="col-md-2 d-flex justify-content-center">
+        <div class="col-md-2 d-flex justify-content-center align-items-center">
+            <i class="fa-solid fa-hand-holding-dollar fa-2xl me-2"></i>
             <div class="d-flex flex-column align-items-center">
-                <div><strong>Balanço Total</strong></div>
+                <div><strong>BALANÇO TOTAL</strong></div>
                 <div><strong>R$ <?php echo number_format($_SESSION['user']->getTotalBalance(), 2, ',', '.') ?></strong></div>
             </div>
         </div>

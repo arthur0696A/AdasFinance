@@ -172,26 +172,57 @@ body {
     text-align: center;
 }
 
+#acoes {
+    border: 2px solid indianred;
+    color: indianred;
+}
+
 #acoes.active {
-    background-color: #df8e7c;
-    color: #721c24;
+    background-color: indianred;
+    color: #ffffff;
+}
+
+#fiis {
+    border: 2px solid indigo;
+    color: indigo;
 }
 
 #fiis.active {
-    background-color: #85c4d1;
-    color: #184576;
+    background-color: indigo;
+    color: #ffffff;
 }
 
-#cripto.active {
-    background-color: #c2a8e4;
-    color: #56219b;
+#criptos {
+    border: 2px solid darkgreen;
+    color: darkgreen;
 }
 
-#asset-filter {
-    width: 90%;
-    margin: 0 auto;
+#criptos.active {
+    background-color: darkgreen;
+    color: #ffffff;
 }
 
 #asset-filter .nav-link {
-    font-size: 1.1em;
+    font-size: 1em;
+    font-family: Impact, sans-serif;
+    font-weight: 900; 
+}
+
+.nav-link:hover {
+    opacity: 0.8;
+}
+
+.accordion-transaction {
+    padding: 20px; 
+    border: 1px solid #ddd; 
+    background-color: #f9f9f9;
+    border-radius: 10px"
+}
+
+.transaction-table thead {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.transaction-table tbody tr {
+    line-height: 2;
 }
