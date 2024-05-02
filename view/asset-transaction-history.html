@@ -1,7 +1,22 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <tr class="asset-transaction-history group-<?php echo $userAsset['group_type']; ?>" id='asset-transaction-history-<?php echo $userAsset["id"]; ?>' style='visibility:collapse'>
   <td colspan="5">
-    <canvas id="myChart" ></canvas>
+    <div id ="asset-chart-container-<?php echo $userAsset['id']; ?>" class="accordion-transaction">
+        <div class="btn-group" data-mdb-toggle="buttons">
+            <input type="radio" class="btn-check" name="periodo" id="ultimoAno" autocomplete="off" value="12" checked />
+            <label class="btn btn-secondary" for="ultimoAno" data-mdb-ripple-color="dark">Último ano</label>
+          
+            <input type="radio" class="btn-check" name="periodo" id="ultimosTresAnos" autocomplete="off" value="36" />
+            <label class="btn btn-secondary" for="ultimosTresAnos" data-mdb-ripple-color="dark">Últimos 3 anos</label>
+          
+            <input type="radio" class="btn-check" name="periodo" id="ultimosCincoAnos" autocomplete="off" value="60" />
+            <label class="btn btn-secondary" for="ultimosCincoAnos" data-mdb-ripple-color="dark">Últimos 5 anos</label>
+          
+            <input type="radio" class="btn-check" name="periodo" id="total" autocomplete="off" value="total" />
+            <label class="btn btn-secondary" for="total" data-mdb-ripple-color="dark">Total</label>
+        </div>
+        <canvas id="price-history-chart-<?php echo $userAsset['symbol']; ?>"></canvas>
+    </div>
   </td>
   <td colspan="5">
       <div class="accordion-transaction">

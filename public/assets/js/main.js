@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function() {
     formatTable();
     calculateObjectivePercentageDifference();
     addEventListeners();
-    createCharts();
     addMessages();
 });
 
@@ -288,8 +287,15 @@ async function addEventListeners() {
 
     const expandButtons = document.querySelectorAll('.expand-button');
     expandButtons.forEach((button) => {
-        button.addEventListener('click', () => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
             let userAssetId = button.getAttribute('data-user-asset-id');
+            let chartContainer = document.getElementById(`asset-chart-container-${userAssetId}`);
+            let canvasId = chartContainer.querySelector('canvas').id;
+            let canvasAssetSymbol = canvasId.split('-')[3];
+            let loadingIcon = document.createElement('i');
 
             if (button.classList.contains("expanded")) {
                 document.getElementById(`asset-transaction-history-${userAssetId}`).style.visibility = 'collapse';
@@ -304,6 +310,12 @@ async function addEventListeners() {
             button.classList.add("fa-chevron-up");
             button.classList.add("expanded");
             
+            if (!chartCreated[canvasAssetSymbol]) {
+                createChart(canvasAssetSymbol).then(() => {
+                
+                });
+                chartCreated[canvasAssetSymbol] = true;
+            }
         });
     });
 
@@ -332,6 +344,14 @@ async function addEventListeners() {
             rows.forEach(row => {
                 row.style.display = isActive ? "" : "none";
             });
+        });
+    });
+
+    const radios = document.querySelectorAll('input[name="periodo"]');
+
+    radios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            refreshChart(radio.value, dados);
         });
     });
 }
@@ -658,24 +678,69 @@ const removeIntMask = (input) => {
     input.value = parseInt(numericValue, 10);
 }
 
-function createCharts() {
-    const ctx = document.getElementById('myChart');
-    new Chart(ctx, {
-        type: 'bar',
+let chart;
+let chartSymbol;
+let dados;
+let chartCreated = {};
+
+async function createChart(symbol) {
+    const apikey = "D6QHBA0GGE0H468N";
+
+    fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol=${symbol}.SAO&apikey=${apikey}`)
+        .then(response => response.json())
+        .then(data => {
+            dados = data;
+            chartSymbol = symbol;
+            refreshChart('12', dados);
+        })
+        .catch(error => {
+            console.error('Erro ao fazer requisição:', error);
+        });
+}
+
+function refreshChart(periodoSelecionado, dados) {
+    const labels = [];
+    const closeValues = [];
+
+    let timeSeries = dados['Monthly Time Series'];
+
+    if (periodoSelecionado !== 'total') {
+        timeSeries = Object.entries(timeSeries).slice(0, periodoSelecionado);
+        timeSeries.forEach(([date, values]) => {
+            labels.push(date);
+            closeValues.push(parseFloat(values['4. close']));
+        });
+    } else {
+        Object.keys(timeSeries).forEach(date => {
+            labels.push(date);
+            closeValues.push(parseFloat(timeSeries[date]['4. close']));
+        });
+    }
+
+    const ctx = document.getElementById(`price-history-chart-${chartSymbol}`).getContext('2d');
+
+    if (chart) {
+        chart.destroy();
+    }
+
+    chart = new Chart(ctx, {
+        type: 'line',
         data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-          datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            borderWidth: 1
-          }]
+            labels: labels.reverse(),
+            datasets: [{
+                label: 'Valor de Fechamento',
+                data: closeValues.reverse(),
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
         },
         options: {
-          scales: {
-            y: {
-              beginAtZero: true
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
             }
-          }
         }
-      });
+    });
 }
