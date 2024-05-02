@@ -34,12 +34,8 @@ class UserAssetController
             $userAssets = $this->userAssetRepository->getAssetsByUserId($userId);
             $userAssets = $this->handleResult($userAssets);
     
-            if (empty($userAssets)) {
-                throw new Exception("User does not have any registered assets");
-            }
-    
             $totalUserAmount = $this->userAssetRepository->getTotalAmountByUserId($userId);
-            $totalUserAmount = $this->handleResult($totalUserAmount)[0]['total_amount'];
+            $totalUserAmount = !empty($totalUserAmount['data'])  ? $this->handleResult($totalUserAmount)[0]['total_amount'] : null;
             $groupTotal = [];
 
             include '../view/home.html';

@@ -1,7 +1,7 @@
 <?php
 namespace AdasFinance\Service;
 
-require_once '../public/config.php';
+require_once '/home/arthur/Projects/AdasFinance/public/config.php';
 use PDO;
 
 class ConnectionCreator
