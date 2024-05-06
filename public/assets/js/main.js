@@ -280,7 +280,25 @@ async function addEventListeners() {
     });
 
     const registerTransactionForm = document.getElementById('register-transaction');
-    registerTransactionForm.addEventListener('submit', () => {
+    let quantityInput = document.getElementById('quantity-transaction');
+    const buyRadioButton = document.getElementById('buy');
+    const sellRadioButton = document.getElementById('sell');
+
+    registerTransactionForm.addEventListener('submit', (event) => {
+        if (quantityInput.value <= 0) {
+            showAlertTransactionContainer('Quantidade deve ser maior que 0');
+            
+            event.preventDefault();
+            return;
+        }
+      
+        if (!buyRadioButton.checked && !sellRadioButton.checked) {
+            showAlertTransactionContainer('Selecione pelo menos uma opção: Comprar ou Vender');
+            
+            event.preventDefault();
+            return;
+        }
+
         removeNumberMask(transactionAveragePriceElement);
         removeNumberMask(transactionQuantityElement);
     });
@@ -549,6 +567,22 @@ function showAlertContainer() {
 
 function closeAlertContainer() {
     document.querySelector('.alert-container').style.display = 'none';
+}
+
+const alertTransactionError = document.getElementById('alert-transaction-error');
+
+function showAlertTransactionContainer(error) {
+    alertTransactionError.innerHTML = `<div><i class="fa-solid fa-triangle-exclamation"></i><span><strong>Atenção: </strong>${error}</span></div>`;
+    alertTransactionError.style.display = 'block';
+
+    setTimeout(async () => {
+        closeAlertTransactionContainer();
+    }, 3000);
+}
+
+function closeAlertTransactionContainer() {
+    alertTransactionError.innerHTML = "";
+    alertTransactionError.style.display = 'none';
 }
 
 function showProcessingModal() {
