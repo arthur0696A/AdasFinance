@@ -1,4 +1,5 @@
 <?php
+
 namespace AdasFinance\Controller;
 
 use AdasFinance\Entity\User;
@@ -13,8 +14,8 @@ class UserController
 
     /** UserRepository */
     private $userRepository;
-    
-    public function __construct() 
+
+    public function __construct()
     {
         $this->assetRepository = new AssetRepository();
         $this->userRepository = new UserRepository();
@@ -23,7 +24,6 @@ class UserController
     public function signupAction()
     {
         $error = $_SESSION['error'] ?? null;
-        unset($_SESSION['error']);
 
         require_once '../view/signup.html';
     }
@@ -33,31 +33,30 @@ class UserController
         $this->validateNoFieldsMissing($parameters);
         $result = $this->userRepository->saveUser($parameters);
 
-        if($result['status'] === 'success') {
+        if ($result['status'] === 'success') {
             header('Location: login');
             exit;
         }
     }
 
-    public function loginAction() 
+    public function loginAction()
     {
         $error = $_SESSION['error'] ?? null;
-        unset($_SESSION['error']);
 
         require_once '../view/login.html';
     }
 
-    public function loginSubmitAction($parameters) 
-    {    
+    public function loginSubmitAction($parameters)
+    {
         $this->validateNoFieldsMissing($parameters);
 
         $user = $this->userRepository->getUserByUsername($parameters->username);
         $this->validateLogin($user, $parameters->password);
-        
+
         $_SESSION['user'] = $user;
         header('Location: home');
     }
-    
+
     public function logoutAction()
     {
         session_destroy();
@@ -66,20 +65,25 @@ class UserController
 
     public function synchronizeUserAssetsAction($parameters)
     {
-        $assets = $this->userRepository->getAllUserAssetSymbols($parameters->userId);
-        
-        foreach($assets as $asset) {
-            $asset->setLastPrice(AlphaVantageApiService::getLastPriceBySymbol($asset->getSymbol()));
-            $this->assetRepository->update($asset);
+        try {
+            $assets = $this->userRepository->getAllUserAssetSymbols($parameters->userId);
+
+            foreach ($assets as $asset) {
+                $asset->setLastPrice(AlphaVantageApiService::getLastPrice($asset));
+                $this->assetRepository->update($asset);
+            }
+
+            return json_encode(['success' => true, 'message' => 'Ativos sincronizados com sucesso']);
+        } catch (\Exception $exception) {
+            return json_encode(['success' => false, 'message' => 'Erro ao sincronizar ativos']);
         }
 
-        return json_encode(['success' => true, 'message' => 'Ativos sincronizados com sucesso']);
     }
 
     private function validateNoFieldsMissing($parameters)
     {
         foreach ($parameters as $key => $value) {
-            if(!$value) {
+            if (!$value) {
                 $_SESSION['error'] = 'Usuário ou senha inválidos';
                 header('Location: ' . $parameters->action);
                 exit;
@@ -88,14 +92,14 @@ class UserController
     }
 
     private function validateLogin(?User $user = null, string $password)
-    {   
-        if(!$user) {
+    {
+        if (!$user) {
             $_SESSION['error'] = 'Usuário ou senha inválidos';
             header('Location: login');
             exit;
         }
-        
-        if(!password_verify($password, $user->getPassword())) {
+
+        if (!password_verify($password, $user->getPassword())) {
             $_SESSION['error'] = 'Usuário ou senha inválidos';
             header('Location: login');
             exit;
@@ -105,4 +109,5 @@ class UserController
     }
 
 }
+
 ?>

@@ -2,6 +2,7 @@
 namespace AdasFinance\AlphaVantage;
 
 class GlobalQuoteDTO {
+    
     private $symbol;
     private $open;
     private $high;

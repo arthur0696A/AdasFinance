@@ -8,24 +8,24 @@ class AssetRepository implements RepositoryInterface
 {
     use RepositoryTrait;
 
-    public function searchByQuery($query)
+    public function searchByQuery($symbol, $id)
     {
         $sql = "SELECT *
         FROM 
             Asset
         WHERE 
-            symbol LIKE :query
-        OR 
-            name LIKE :query
+            id NOT IN (SELECT ua.asset_id FROM UserAsset ua WHERE ua.user_id = :userId)
+            AND (symbol LIKE :symbol OR name LIKE :symbol)
         ORDER BY
             CASE
-                WHEN symbol LIKE :query THEN 0
+                WHEN symbol LIKE :symbol THEN 0
                 ELSE 1
             END,
             symbol";
         
         $params = [
-            ':query' => $query . '%'
+            ':symbol' => $symbol . '%',
+            ':userId' => $id
         ];
 
         return $this->query($sql, $params);

@@ -1,4 +1,5 @@
 <?php
+
 namespace AdasFinance\AlphaVantage;
 
 class AlphaVantageApiService
@@ -11,21 +12,50 @@ class AlphaVantageApiService
     {
         $symbol = 'tesco';
 
-        $url = self::API_BASE_URL . 'query?function=SYMBOL_SEARCH&keywords=' . urlencode($symbol) . '&apikey=' . self::API_KEY;
+        $url = self::API_BASE_URL . 'query?function=SYMBOL_SEARCH&keywords=' . urlencode(
+                $symbol
+            ) . '&apikey=' . self::API_KEY;
         $response = file_get_contents($url);
         $data = json_decode($response, true);
 
         return $data;
     }
 
-    public static function getLastPriceBySymbol($symbol)
+    public static function getLastPrice($asset)
+    {
+        if ($asset->getGroupType() == 3) {
+            return self::getDigitalCurrencyMonthly($asset->getSymbol());
+        }
+
+        return self::getGlobalQuote($asset->getSymbol());
+    }
+
+    private static function getGlobalQuote($symbol)
     {
         $symbol .= ".SAO";
-        $url = self::API_BASE_URL . 'query?function=GLOBAL_QUOTE&symbol=' . urlencode($symbol) . '&apikey=' . self::API_KEY;
+        $url = self::API_BASE_URL . 'query?function=GLOBAL_QUOTE&symbol=' . urlencode(
+                $symbol
+            ) . '&apikey=' . self::API_KEY;
         $response = file_get_contents($url);
         $data = json_decode($response, true);
 
-        $globalQuoteDTO = GlobalQuoteDTO::fromArray($data);
-        return $globalQuoteDTO->getPrice();
+        $globalQuoteDto = GlobalQuoteDTO::fromArray($data);
+
+        return $globalQuoteDto->getPrice();
     }
+
+    private static function getDigitalCurrencyMonthly($symbol)
+    {
+        $url = self::API_BASE_URL . 'query?function=DIGITAL_CURRENCY_MONTHLY&symbol=' . urlencode(
+                $symbol
+            ) . '&market=BRL&apikey=' . self::API_KEY;
+
+        $response = file_get_contents($url);
+        $data = json_decode($response, true);
+
+        $cryptoCurrencyDto = CryptoCurrencyDTO::fromArray($data);
+
+        return $cryptoCurrencyDto->getTimeSeriesDto()->getClose();
+    }
+
 }
