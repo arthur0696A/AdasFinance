@@ -1,5 +1,5 @@
 <?php
-namespace AdasFinance\AlphaVantage;
+namespace AdasFinance\AlphaVantage\Ibovespa;
 
 class GlobalQuoteDTO {
     
@@ -42,18 +42,22 @@ class GlobalQuoteDTO {
     {
         $globalQuoteData = $data['Global Quote'];
 
-        return new GlobalQuoteDTO(
-            $globalQuoteData['01. symbol'],
-            $globalQuoteData['02. open'],
-            $globalQuoteData['03. high'],
-            $globalQuoteData['04. low'],
-            $globalQuoteData['05. price'],
-            $globalQuoteData['06. volume'],
-            $globalQuoteData['07. latest trading day'],
-            $globalQuoteData['08. previous close'],
-            $globalQuoteData['09. change'],
-            $globalQuoteData['10. change percent']
-        );
+        if ($globalQuoteData) {
+            return new GlobalQuoteDTO(
+                $globalQuoteData['01. symbol'],
+                $globalQuoteData['02. open'],
+                $globalQuoteData['03. high'],
+                $globalQuoteData['04. low'],
+                $globalQuoteData['05. price'],
+                $globalQuoteData['06. volume'],
+                $globalQuoteData['07. latest trading day'],
+                $globalQuoteData['08. previous close'],
+                $globalQuoteData['09. change'],
+                $globalQuoteData['10. change percent']
+            );
+        }
+        
+        throw new \Exception('Daily rate limits exceded');
     }
 
     public function getSymbol(): string {

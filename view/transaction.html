@@ -9,12 +9,28 @@
                 <div class="modal-body">
                     <form id="register-transaction" action="register_transaction" method="post">
                         <div class="mb-4 mt-1">
-                            <div class="btn-group col-md-12">
-                                <input type="radio" class="btn-check" name="transaction-type-id" id="buy" autocomplete="off" value="1" style="height: 50px;"/>
-                                <label class="btn btn-secondary btn-default" for="buy" onclick="toggleButtons('buy', 'sell')">Comprar</label>
+                            <div class="btn-group col-md-12" style="height: 3em; ">
+                                <input type="radio" class="btn-check" name="transaction-type-id" id="buy" autocomplete="off" value="1"/>
+                                <label class="btn btn-secondary btn-default" 
+                                    for="buy" 
+                                    onmouseover="mouseOverBuy(this)"
+                                    onmouseleave="removeBtnStyle(this)"
+                                    onclick="toggleButtons('buy', 'sell')" 
+                                    style="font-size: 1em;
+                                    color: darkgreen;">
+                                    Comprar
+                                </label>
                               
                                 <input type="radio" class="btn-check" name="transaction-type-id" id="sell" autocomplete="off" value="2" />
-                                <label class="btn btn-secondary btn-default" for="sell" onclick="toggleButtons('sell', 'buy')">Vender</label>
+                                <label class="btn btn-secondary btn-default" 
+                                    for="sell" 
+                                    onmouseover="mouseOverSell(this)"
+                                    onmouseleave="removeBtnStyle(this)"
+                                    onclick="toggleButtons('sell', 'buy')" 
+                                    style="font-size: 1em;
+                                    color: indianred;">
+                                    Vender
+                                </label>
                             </div>
                         </div>
                         <div class="d-flex mb-4 mt-1">
@@ -44,9 +60,9 @@
                                 <label for="quantity" class="form-label">Quantidade</label>
                             </div>
                             <div class="form-outline d-flex" data-mdb-input-init>
-                                <button type="button" class="btn btn-primary flex-fill me-1" onclick="incrementValue(1)">+1</button>
-                                <button type="button" class="btn btn-primary flex-fill me-1" onclick="incrementValue(10)">+10</button>
-                                <button type="button" class="btn btn-primary flex-fill" onclick="incrementValue(100)">+100</button>
+                                <button type="button" class="btn btn-primary flex-fill me-1" onclick="incrementValueTransaction(1)">+1</button>
+                                <button type="button" class="btn btn-primary flex-fill me-1" onclick="incrementValueTransaction(10)">+10</button>
+                                <button type="button" class="btn btn-primary flex-fill" onclick="incrementValueTransaction(100)">+100</button>
                             </div>
                         </div>
                         <div id="alert-transaction-error" class="message-container" style="display: none;"></div>

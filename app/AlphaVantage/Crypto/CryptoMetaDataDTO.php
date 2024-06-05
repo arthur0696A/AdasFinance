@@ -1,17 +1,16 @@
 <?php
 
-namespace AdasFinance\AlphaVantage;
+namespace AdasFinance\AlphaVantage\Crypto;
 
-class MetaData
+class CryptoMetaDataDTO
 {
-
-    public $information;
-    public $currencyCode;
-    public $currencyName;
-    public $marketCode;
-    public $marketName;
-    public $lastRefreshed;
-    public $timeZone;
+    private $information;
+    private $currencyCode;
+    private $currencyName;
+    private $marketCode;
+    private $marketName;
+    private $lastRefreshed;
+    private $timeZone;
 
     public function __construct(
         $information,

@@ -10,19 +10,22 @@ class Asset {
     private $name;
     private $lastPrice;
     private $groupType;
+    private $chartHistory;
 
     public function __construct(
         ?int $id = null,
         ?string $symbol = null,
         ?string $name = null,
         ?float $lastPrice = null,
-        ?int $groupType = null
+        ?int $groupType = null,
+        ?string $chartHistory
     ) {
         $this->id = $id;
         $this->symbol = $symbol;
         $this->name = $name;
         $this->lastPrice = $lastPrice;
         $this->groupType = $groupType;
+        $this->chartHistory = $chartHistory;
     }
 
     public static function createFromParams(stdClass $params): self 
@@ -32,7 +35,8 @@ class Asset {
             self::convertToType($params->symbol, 'string'),
             self::convertToType($params->name, 'string'),
             self::convertToType($params->lastPrice, 'double'),
-            self::convertToType($params->groupType, 'int')
+            self::convertToType($params->groupType, 'int'),
+            self::convertToType($params->chartHistory, 'string'),
         );
     }
 
@@ -125,7 +129,7 @@ class Asset {
         return $this;
     }
 
-      /**
+    /**
      * Get the value of groupType
      */ 
     public function getGroupType()
@@ -144,4 +148,26 @@ class Asset {
 
         return $this;
     }
+
+
+    /**
+     * Get the value of chartHistory
+     */ 
+    public function getChartHistory()
+    {
+        return $this->chartHistory;
+    }
+
+    /**
+     * Set the value of chartHistory
+     *
+     * @return  self
+     */ 
+    public function setChartHistory($chartHistory)
+    {
+        $this->chartHistory = $chartHistory;
+
+        return $this;
+    }
+
 }

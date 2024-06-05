@@ -105,7 +105,7 @@ class DatabasePopulator {
 }
 
 $api_key = '0a38b78f';
-$processor = new AssetProcessor($api_key);
+$processor = new DatabasePopulator($api_key);
 $processor->processAssets();
 
 ?>

@@ -96,8 +96,7 @@ class UserAssetController
         }
     }
 
-    public
-    function userAssetSaveAction(
+    public function userAssetSaveAction(
         $parameters
     ) {
         try {

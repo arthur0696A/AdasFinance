@@ -313,7 +313,6 @@ async function addEventListeners() {
             let chartContainer = document.getElementById(`asset-chart-container-${userAssetId}`);
             let canvasId = chartContainer.querySelector('canvas').id;
             let canvasAssetSymbol = canvasId.split('-')[3];
-            let loadingIcon = document.createElement('i');
 
             if (button.classList.contains("expanded")) {
                 document.getElementById(`asset-transaction-history-${userAssetId}`).style.visibility = 'collapse';
@@ -416,6 +415,13 @@ function addMessages() {
             icon: 'success',
             title: 'Sucesso!',
             text: 'Ativos sincronizados com sucesso',
+            timer: 2000
+        });
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Erro ao sincronizar os ativos',
+            text: 'Limite de requisições diárias excedidas',
             timer: 2000
         });
     }
@@ -529,6 +535,13 @@ function incrementValue(incrementBy) {
     inputElement.value = newValue;
 }
 
+function incrementValueTransaction(incrementBy) {
+    const inputElement = document.getElementById('quantity-transaction');
+    let currentValue = parseFloat(inputElement.value);
+    let newValue = currentValue + incrementBy;
+    inputElement.value = newValue;
+}
+
 function toggleButtons(selected, other) {
     document.getElementById(selected).checked = true;
     document.getElementById(other).checked = false;
@@ -538,6 +551,30 @@ function toggleButtons(selected, other) {
 
     document.querySelector('label[for="' + other + '"]').classList.add('btn-default');
     document.querySelector('label[for="' + other + '"]').classList.remove('btn-buy', 'btn-sell');
+}
+
+function mouseOverBuy(element) {
+    let input = document.getElementById(element.htmlFor);
+    if (!input.checked) {
+        element.classList.remove('btn-default');
+        element.classList.add('btn-buy');
+    }
+}
+
+function mouseOverSell(element) {
+    let input = document.getElementById(element.htmlFor);
+    if (!input.checked) {
+        element.classList.remove('btn-default');
+        element.classList.add('btn-sell');
+    }
+}
+
+function removeBtnStyle(element) {
+    let input = document.getElementById(element.htmlFor);
+    if (!input.checked) {
+        element.id == "buy" ? element.classList.remove('btn-buy') : element.classList.remove('btn-sell');
+        element.classList.add('btn-default');
+    }
 }
 
 function convertToFloat(value) {
@@ -718,18 +755,21 @@ let dados;
 let chartCreated = {};
 
 async function createChart(symbol) {
-    const apikey = "D6QHBA0GGE0H468N";
+    try {
+        const response = await fetch(`http://localhost:8000/chart_history?symbol=${symbol}`);
+        console.log(response);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-    fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol=${symbol}.SAO&apikey=${apikey}`)
-        .then(response => response.json())
-        .then(data => {
-            dados = data;
-            chartSymbol = symbol;
-            refreshChart('12', dados);
-        })
-        .catch(error => {
-            console.error('Erro ao fazer requisição:', error);
-        });
+        const data = await response.json();
+
+        dados = JSON.parse(data);
+        chartSymbol = symbol;
+        refreshChart('12', dados);
+    } catch (error) {
+        console.error('Erro ao fazer requisição:', error);
+    }
 }
 
 function refreshChart(periodoSelecionado, dados) {
