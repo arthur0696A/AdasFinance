@@ -417,14 +417,15 @@ function addMessages() {
             text: 'Ativos sincronizados com sucesso',
             timer: 2000
         });
-    } else {
-        Swal.fire({
-            icon: 'error',
-            title: 'Erro ao sincronizar os ativos',
-            text: 'Limite de requisições diárias excedidas',
-            timer: 2000
-        });
     }
+    //  else {
+    //     Swal.fire({
+    //         icon: 'error',
+    //         title: 'Erro ao sincronizar os ativos',
+    //         text: 'Limite de requisições diárias excedidas',
+    //         timer: 2000
+    //     });
+    // }
 }
 
 async function searchBySymbol(symbol) {
