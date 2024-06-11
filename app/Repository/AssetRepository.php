@@ -33,18 +33,59 @@ class AssetRepository implements RepositoryInterface
 
     public function update(Asset $asset)
     {
-        $sql = "UPDATE
-        Asset
-        SET
-            last_price = :last_price
-        WHERE
-            id = :id";
+        $setParts = [];
+        $whereParts = [];
+        $params = [];
+        
+        if ($asset->getId() !== null) {
+            $whereParts[] = 'id = :id';
+            $params[':id'] = $asset->getId();
+        }
+
+        if ($asset->getSymbol() !== null) {
+            $whereParts[] = 'symbol = :symbol';
+            $params[':symbol'] = $asset->getSymbol();
+        }
+
+        if ($asset->getLastPrice() !== null) {
+            $setParts[] = 'last_price = :last_price';
+            $params[':last_price'] = $asset->getLastPrice();
+        }
+    
+        if ($asset->getChartHistory() !== null) {
+            $setParts[] = 'chart_history = :chart_history';
+            $params[':chart_history'] = $asset->getChartHistory();
+        }
+    
+        if (empty($setParts)) {
+            throw new \InvalidArgumentException('No fields to update');
+        }
+
+        if (empty($whereParts)) {
+            throw new \InvalidArgumentException('No where clause');
+        }
+
+        $setClause = implode(', ', $setParts);
+        $whereClause = implode(', ', $whereParts);
+
+        $sql = "UPDATE Asset SET $setClause WHERE $whereClause";
+    
+        $this->query($sql, $params);
+
+    }
+
+    public function getChartHistoryBySymbol($symbol)
+    {
+        $sql = "SELECT chart_history
+        FROM 
+            Asset
+        WHERE 
+            symbol = :symbol";
         
         $params = [
-            ':id' => $asset->getId(),
-            ':last_price' => $asset->getLastPrice(),
+            ':symbol' => $symbol,
         ];
 
-        $this->query($sql, $params);
+        return $this->query($sql, $params);
     }
 }

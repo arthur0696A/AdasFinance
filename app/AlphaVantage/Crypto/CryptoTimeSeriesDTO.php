@@ -1,16 +1,15 @@
 <?php
 
-namespace AdasFinance\AlphaVantage;
+namespace AdasFinance\AlphaVantage\Crypto;
 
-class TimeSeries
+class CryptoTimeSeriesDTO
 {
-
-    public $date;
-    public $open;
-    public $high;
-    public $low;
-    public $close;
-    public $volume;
+    private $date;
+    private $open;
+    private $high;
+    private $low;
+    private $close;
+    private $volume;
 
     public function __construct($date, $open, $high, $low, $close, $volume)
     {

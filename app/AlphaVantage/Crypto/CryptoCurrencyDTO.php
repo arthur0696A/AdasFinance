@@ -1,6 +1,6 @@
 <?php
 
-namespace AdasFinance\AlphaVantage;
+namespace AdasFinance\AlphaVantage\Crypto;
 
 class CryptoCurrencyDTO
 {
@@ -30,18 +30,22 @@ class CryptoCurrencyDTO
             array_keys($data['Time Series (Digital Currency Monthly)']),
             $data['Time Series (Digital Currency Monthly)']);
 
-        return new CryptoCurrencyDTO(
-            new MetaData(
-                $metaData['1. Information'],
-                $metaData['2. Digital Currency Code'],
-                $metaData['3. Digital Currency Name'],
-                $metaData['4. Market Code'],
-                $metaData['5. Market Name'],
-                $metaData['6. Last Refreshed'],
-                $metaData['7. Time Zone']
-            ),
-            $timeSeries
-        );
+        if ($metaData && $timeSeries) {
+            return new CryptoCurrencyDTO(
+                new MetaData(
+                    $metaData['1. Information'],
+                    $metaData['2. Digital Currency Code'],
+                    $metaData['3. Digital Currency Name'],
+                    $metaData['4. Market Code'],
+                    $metaData['5. Market Name'],
+                    $metaData['6. Last Refreshed'],
+                    $metaData['7. Time Zone']
+                ),
+                $timeSeries
+            );
+        }
+        
+        throw new \Exception('Daily rate limits exceded');
     }
 }
 

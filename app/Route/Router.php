@@ -16,7 +16,8 @@ class Router
     
     private const FETCH_ROUTES = [
         '/search_by_symbol',
-        '/user_asset_goal_percentage'
+        '/user_asset_goal_percentage',
+        '/chart_history',
     ];
 
     public static function load(string $controller, string $action)
@@ -53,7 +54,7 @@ class Router
                 '/logout' => fn () => self::load('UserController', 'logout'),
                 '/home' => fn () => self::load('UserAssetController', 'home'),
                 '/search_by_symbol' => fn () => self::load('AssetController', 'searchBySymbol'),
-                // '/' => fn () => self::load('fazer 404'),
+                '/chart_history' => fn () => self::load('AssetController', 'chartHistory'),
             ],
 
             'post' => [

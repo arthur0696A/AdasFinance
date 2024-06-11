@@ -2,6 +2,9 @@
 
 namespace AdasFinance\AlphaVantage;
 
+use AdasFinance\AlphaVantage\Ibovespa\ChartDataDTO;
+use AdasFinance\AlphaVantage\Ibovespa\GlobalQuoteDTO;
+
 class AlphaVantageApiService
 {
     private const API_KEY = 'D6QHBA0GGE0H468N';
@@ -56,6 +59,20 @@ class AlphaVantageApiService
         $cryptoCurrencyDto = CryptoCurrencyDTO::fromArray($data);
 
         return $cryptoCurrencyDto->getTimeSeriesDto()->getClose();
+    }
+
+    public static function getChartHistory($symbol)
+    {
+        $url = self::API_BASE_URL . 'query?function=TIME_SERIES_MONTHLY&symbol=' . urlencode(
+                $symbol
+            ) . '.SAO&apikey=' . self::API_KEY;
+
+        $response = file_get_contents($url);
+
+        $encodedResponse = json_encode($response);
+        $chartDataDTO = @ChartDataDTO::convertToDTOs($encodedResponse);
+
+        return $chartDataDTO;
     }
 
 }
