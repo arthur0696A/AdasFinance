@@ -31,7 +31,7 @@ class AssetRepository implements RepositoryInterface
         return $this->query($sql, $params);
     }
 
-    public function update(Asset $asset)
+    public function update(Asset $asset, bool $isChartHistory)
     {
         $setParts = [];
         $whereParts = [];
@@ -52,7 +52,7 @@ class AssetRepository implements RepositoryInterface
             $params[':last_price'] = $asset->getLastPrice();
         }
     
-        if ($asset->getChartHistory() !== null) {
+        if ($isChartHistory) {
             $setParts[] = 'chart_history = :chart_history';
             $params[':chart_history'] = $asset->getChartHistory();
         }
@@ -65,8 +65,8 @@ class AssetRepository implements RepositoryInterface
             throw new \InvalidArgumentException('No where clause');
         }
 
-        $setClause = implode(', ', $setParts);
-        $whereClause = implode(', ', $whereParts);
+        $setClause = implode(' AND ', $setParts);
+        $whereClause = implode(' AND ', $whereParts);
 
         $sql = "UPDATE Asset SET $setClause WHERE $whereClause";
     

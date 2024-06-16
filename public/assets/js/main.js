@@ -417,15 +417,14 @@ function addMessages() {
             text: 'Ativos sincronizados com sucesso',
             timer: 2000
         });
+    } else if (syncSuccess === 'false') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Erro ao sincronizar os ativos',
+            text: 'Limite de requisições diárias excedidas',
+            timer: 2000
+        });
     }
-    //  else {
-    //     Swal.fire({
-    //         icon: 'error',
-    //         title: 'Erro ao sincronizar os ativos',
-    //         text: 'Limite de requisições diárias excedidas',
-    //         timer: 2000
-    //     });
-    // }
 }
 
 async function searchBySymbol(symbol) {
@@ -518,14 +517,15 @@ async function synchronizeUserAssets(userId) {
 
     try {
         const response = await fetch('http://localhost:8000/synchronize_user_assets', options);
+
         if (response.ok) {
             closeProcessingModal();
             window.location.href = 'http://localhost:8000/home?syncSuccess=true';
         } else {
-            console.error('Falha ao sincronizar:', response.statusText);
+            window.location.href = 'http://localhost:8000/home?syncSuccess=false';
         }
     } catch (error) {
-        console.error('Falha ao sincronizar:', error);
+        window.location.href = 'http://localhost:8000/home?syncSuccess=false';
     }
 }
 

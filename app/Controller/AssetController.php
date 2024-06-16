@@ -35,7 +35,7 @@ class AssetController
         
         if ($chartHistory) {
             $asset = new Asset(null, $parameters->symbol, null, null, null, $chartHistory);
-            $this->assetRepository->update($asset);
+            $this->assetRepository->update($asset, true);
         } else {
             $chartHistory = $this->assetRepository->getChartHistoryBySymbol($parameters->symbol)['data'][0]->chart_history;
         }
