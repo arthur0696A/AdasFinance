@@ -69,10 +69,9 @@ class AlphaVantageApiService
 
         $response = file_get_contents($url);
 
-        $encodedResponse = json_encode($response);
-        $chartDataDTO = @ChartDataDTO::convertToDTOs($encodedResponse);
+        // $chartDataDTO = @ChartDataDTO::convertToDTOs(json_decode($response));
 
-        return $chartDataDTO;
+        return $response;
     }
 
 }

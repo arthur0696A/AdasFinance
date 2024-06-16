@@ -69,13 +69,17 @@ class UserController
             $assets = $this->userRepository->getAllUserAssetSymbols($parameters->userId);
 
             foreach ($assets as $asset) {
-                $asset->setLastPrice(AlphaVantageApiService::getLastPrice($asset));
-                $this->assetRepository->update($asset);
+                if ($asset->getId() !== 1461) {
+                    $asset->setLastPrice(AlphaVantageApiService::getLastPrice($asset));
+                    $this->assetRepository->update($asset, false);
+                }
             }
 
-            return json_encode(['success' => true, 'message' => 'Ativos sincronizados com sucesso']);
+            echo json_encode(['success' => true, 'message' => 'Ativos sincronizados com sucesso']);
         } catch (\Exception $exception) {
-            return json_encode(['success' => false, 'message' => 'Erro ao sincronizar ativos']);
+            header('Content-Type: application/json');
+            http_response_code(500); 
+            echo json_encode(['success' => false, 'message' => $exception->getMessage()]);
         }
 
     }

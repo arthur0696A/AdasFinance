@@ -14,21 +14,19 @@ class ChartDataDTO
     }
 
     public static function convertToDTOs($json) {
-
-        $data = json_decode($json);
     
-        if ($data->{'Meta Data'}) {
+        if ($json->{'Meta Data'}) {
             $metaData = new MetaDataDTO(
-                $data->{'Meta Data'}->{'1. Information'},
-                $data->{'Meta Data'}->{'2. Symbol'},
-                $data->{'Meta Data'}->{'3. Last Refreshed'},
-                $data->{'Meta Data'}->{'4. Time Zone'}
+                $json->{'Meta Data'}->{'1. Information'},
+                $json->{'Meta Data'}->{'2. Symbol'},
+                $json->{'Meta Data'}->{'3. Last Refreshed'},
+                $json->{'Meta Data'}->{'4. Time Zone'}
             );
         }
         
         $timeSeries = [];
-        if ($data->{'Monthly Time Series'}) {
-            foreach ($data->{'Monthly Time Series'} as $date => $series) {
+        if ($json->{'Monthly Time Series'}) {
+            foreach ($json->{'Monthly Time Series'} as $date => $series) {
                 $timeSeries[] = new TimeSeriesDTO(
                     $date,
                     $series->{'1. open'},
